@@ -1,6 +1,6 @@
 [submodule "contracts"]
-	url = https://github.com/Aurove/contracts.git
+	url = https://github.com/aurove/horizon-contracts.git
 	path = contracts
 [submodule "wormhole"]
-	url = https://github.com/wormhole-foundation/wormhole.git
+	url = https://github.com/aurove/horizon-wormhole.git
 	path = wormhole
