@@ -11,6 +11,8 @@
     "ntt:commands": "pnpm --filter @aurove/horizon-wormhole exec tsx scripts/print-add-chain-commands.ts",
     "ntt:install": "pnpm --filter @aurove/horizon-wormhole ntt:install",
     "ntt:init": "pnpm --filter @aurove/horizon-wormhole ntt:init",
-    "ntt:deploy": "pnpm --filter @aurove/horizon-wormhole ntt:deploy"
+    "ntt:deploy": "pnpm --filter @aurove/horizon-wormhole ntt:deploy",
+    "deploy:cross-chain:testnet": "node scripts/deploy-horizon.mjs testnet",
+    "deploy:cross-chain:mainnet": "node scripts/deploy-horizon.mjs mainnet"
   }
 }

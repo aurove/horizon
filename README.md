@@ -216,6 +216,8 @@ git submodule update --remote
 
 The workspace provides root scripts for building and testing the contracts and initializing the Wormhole NTT configuration. See [`wormhole/README.md`](./wormhole/README.md) for NTT CLI setup and deployment steps.
 
+The end-to-end deployment entry points are `pnpm deploy:cross-chain:testnet` and `pnpm deploy:cross-chain:mainnet`. They deploy the Mezo vaults and Base peers, deploy/configure NTT, set per-token rate limits, and seal each spoke peer to its NTT Manager. See [`wormhole/README.md`](./wormhole/README.md) for required environment variables and safeguards.
+
 ## Buildathon Roadmap
 
 Horizon is being developed during the **2026 Mezo Buildathon on AKINDO**.
