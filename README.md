@@ -90,21 +90,21 @@ The initial design focuses on existing managed Aurove positions, with support fo
 
 ### 4. Bridge to Base
 
-Vault shares can be transferred between Mezo and Base using Wormhole NTT infrastructure.
+Vault shares are designed to move between Mezo and Base using Wormhole NTT infrastructure once deployment and configuration are complete.
 
-The cross-chain mechanism maintains a backed representation of the originating vault shares while the underlying locked positions remain on Mezo.
+The intended cross-chain design maintains a backed representation of the originating vault shares while the underlying locked positions remain on Mezo.
 
 ### 5. Access Aerodrome liquidity
 
-On Base, bridged Horizon vault shares can be paired with MUSD in Aerodrome liquidity pools.
+On Base, bridged Horizon vault shares are intended to be paired with MUSD in Aerodrome liquidity pools.
 
-Users can trade these representations or provide liquidity without requiring the original veNFT positions to leave Mezo.
+Users will be able to trade these representations or provide liquidity without requiring the original veNFT positions to leave Mezo.
 
 ### 6. Return to Mezo
 
 The process is designed to work in reverse.
 
-Users can withdraw liquidity, bridge their vault shares back to Mezo, redeem the ERC-4626 shares for their underlying Id20 tokens, and continue through Aurove's existing redemption lifecycle.
+The intended return path lets users withdraw liquidity, bridge vault shares back to Mezo, redeem ERC-4626 shares for underlying Id20 tokens, and continue through Aurove's existing redemption lifecycle.
 
 **Mezo Earn rewards and yields are claimable only on Mezo, through the applicable withdrawal or redemption process.** Bridging vault shares to Base does not transfer the underlying reward-claiming mechanism to Base.
 
@@ -224,18 +224,20 @@ Horizon is being developed during the **2026 Mezo Buildathon on AKINDO**.
 
 ### Phase 1 — Vault Infrastructure
 
-- [ ] Implement ERC-4626 vaults for eligible Aurove Id20 assets.
-- [ ] Define vault creation and supported position classes.
-- [ ] Integrate deposit and redemption flows with existing Aurove representations.
-- [ ] Integrate Aurove's Id20 yield-claiming and compounding mechanism.
-- [ ] Test share accounting, conversions, and withdrawal invariants.
+- [x] Implement ERC-4626 vaults for eligible Aurove Id20 assets.
+- [x] Define a one-vault-per-Id20 creation registry in `VaultFactory`.
+- [x] Implement deposit, mint, withdraw, and redeem flows for vault shares.
+- [x] Integrate Aurove Id20 reward claiming and gauge compounding.
+- [x] Add vault accounting, conversion, withdrawal, and invariant test coverage.
 
 ### Phase 2 — Cross-Chain Integration
 
-- [ ] Configure Wormhole NTT for Horizon vault shares.
-- [ ] Deploy and configure Mezo and Base endpoints.
+- [x] Initialize NTT tooling, pin the CLI, and provide config initialization and deployment helpers.
+- [x] Implement the Base `VaultPeer` representation with an NTT-manager-only mint/burn boundary and one-time minter sealing.
+- [x] Add a modular Horizon deployment script for Mezo vaults, Base peers, NTT managers, peer configuration, limits, and minter handoff.
+- [ ] Execute the deployment and configure Mezo and Base endpoints on the target networks.
 - [ ] Implement cross-chain transfer and settlement flows.
-- [ ] Verify backing and supply conservation across chains.
+- [ ] Run Mezo → Base → Mezo round-trip tests and verify backing and supply conservation.
 - [ ] Test return transfers and vault redemption.
 
 ### Phase 3 — External Liquidity
@@ -253,7 +255,7 @@ Horizon is being developed during the **2026 Mezo Buildathon on AKINDO**.
 - [ ] Extend support to additional Aurove position classes.
 - [ ] Improve cross-chain liquidity management and integrations.
 
-These are development targets, not claims of completed deployments.
+Checked items describe implementation and test coverage in the repository. Network deployment, live NTT configuration, and bridge round-trip verification remain outstanding.
 
 ## Security Considerations
 
