@@ -8,6 +8,9 @@
     "compile": "pnpm --filter @aurove/horizon-contracts compile",
     "clean": "pnpm --filter @aurove/horizon-contracts clean",
     "typecheck": "pnpm --filter @aurove/horizon-contracts typecheck && pnpm --filter @aurove/horizon-wormhole typecheck",
-    "ntt:commands": "pnpm --filter @aurove/horizon-wormhole exec tsx scripts/print-add-chain-commands.ts"
+    "ntt:commands": "pnpm --filter @aurove/horizon-wormhole exec tsx scripts/print-add-chain-commands.ts",
+    "ntt:install": "pnpm --filter @aurove/horizon-wormhole ntt:install",
+    "ntt:init": "pnpm --filter @aurove/horizon-wormhole ntt:init",
+    "ntt:deploy": "pnpm --filter @aurove/horizon-wormhole ntt:deploy"
   }
 }

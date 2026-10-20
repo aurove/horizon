@@ -214,7 +214,7 @@ To fetch the latest commits from the configured submodule branches:
 git submodule update --remote
 ```
 
-The workspace currently has no configured root build or test scripts. Installation, deployment, and test instructions will be expanded as the implementations are added.
+The workspace provides root scripts for building and testing the contracts and initializing the Wormhole NTT configuration. See [`wormhole/README.md`](./wormhole/README.md) for NTT CLI setup and deployment steps.
 
 ## Buildathon Roadmap
 
