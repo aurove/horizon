@@ -1,10 +1,18 @@
 import { spawnSync } from "node:child_process";
+import { existsSync } from "node:fs";
 import { dirname, resolve } from "node:path";
+import { homedir } from "node:os";
 import { fileURLToPath } from "node:url";
 
 export const HORIZON_ROOT = resolve(dirname(fileURLToPath(import.meta.url)), "../..");
-export const WORMHOLE_PACKAGE = resolve(HORIZON_ROOT, "wormhole");
+export const NTT_PROJECT_ROOT = resolve(homedir(), ".ntt-cli/.checkout");
 export const CONTRACTS_PACKAGE = "@aurove/horizon-contracts";
+export const WORMHOLE_PACKAGE = "@aurove/horizon-wormhole";
+
+export function loadRootEnv() {
+  const envPath = resolve(HORIZON_ROOT, ".env");
+  if (existsSync(envPath)) process.loadEnvFile(envPath);
+}
 
 export function run(command, args, env = process.env, capture = false, cwd = HORIZON_ROOT) {
   const result = spawnSync(command, args, {

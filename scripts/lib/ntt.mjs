@@ -1,11 +1,31 @@
+import { existsSync, writeFileSync } from "node:fs";
+import { resolve } from "node:path";
 import { readJson, requireAddress, writeJsonAtomically } from "./config.mjs";
-import { run, WORMHOLE_PACKAGE } from "./commands.mjs";
+import { run, NTT_PROJECT_ROOT } from "./commands.mjs";
+
+function configureNttRpcOverrides(env) {
+  const mainnet = env.HORIZON_NTT_NETWORK === "Mainnet";
+  const chains = {
+    ...(env[mainnet ? "MEZO_MAINNET_RPC_URL" : "MEZO_TESTNET_RPC_URL"]
+      ? { Mezo: { rpc: env[mainnet ? "MEZO_MAINNET_RPC_URL" : "MEZO_TESTNET_RPC_URL"] } }
+      : {}),
+    ...(env[mainnet ? "BASE_RPC_URL" : "BASE_SEPOLIA_RPC_URL"]
+      ? { [mainnet ? "Base" : "BaseSepolia"]: { rpc: env[mainnet ? "BASE_RPC_URL" : "BASE_SEPOLIA_RPC_URL"] } }
+      : {}),
+  };
+  if (Object.keys(chains).length === 0) return;
+
+  const path = resolve(NTT_PROJECT_ROOT, "overrides.json");
+  const existing = existsSync(path) ? readJson(path) : {};
+  writeFileSync(path, JSON.stringify({ ...existing, chains: { ...existing.chains, ...chains } }, null, 2));
+}
 
 export function initializeNtt(env) {
   run("pnpm", ["run", "ntt:init"], env);
 }
 
-export function ensureNttChain(path, network, chain, mode, tokenAddress, expectedOwner) {
+export function ensureNttChain(path, network, chain, mode, tokenAddress, expectedOwner, env = process.env) {
+  configureNttRpcOverrides(env);
   let config = readJson(path);
   if (config.network !== network) {
     throw new Error(`${path} is for ${config.network}; expected ${network}`);
@@ -26,7 +46,9 @@ export function ensureNttChain(path, network, chain, mode, tokenAddress, expecte
     return manager;
   }
 
-  run("ntt", ["add-chain", chain, "--latest", "--mode", mode, "--token", tokenAddress, "-p", path], process.env, false, WORMHOLE_PACKAGE);
+  const args = ["add-chain", chain, "--latest", "--mode", mode, "--token", tokenAddress, "--yes", "-p", path];
+  if (env.HORIZON_SKIP_NTT_VERIFY === "YES") args.push("--skip-verify");
+  run("ntt", args, env, false, NTT_PROJECT_ROOT);
   config = readJson(path);
   const added = config.chains?.[chain];
   const manager = requireAddress(added?.manager, `${chain} NTT Manager`);
@@ -51,7 +73,10 @@ export function configureLimits(path, hubChain, spokeChain, limit) {
   writeJsonAtomically(path, config);
 }
 
-export function pushAndVerifyNtt(path) {
-  run("ntt", ["push", "-p", path], process.env, false, WORMHOLE_PACKAGE);
-  run("ntt", ["status", "-p", path], process.env, false, WORMHOLE_PACKAGE);
+export function pushAndVerifyNtt(path, env = process.env) {
+  configureNttRpcOverrides(env);
+  const args = ["push", "--yes", "-p", path];
+  if (env.HORIZON_SKIP_NTT_VERIFY === "YES") args.push("--skip-verify");
+  run("ntt", args, env, false, NTT_PROJECT_ROOT);
+  run("ntt", ["status", "-p", path], env, false, NTT_PROJECT_ROOT);
 }

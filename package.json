@@ -13,6 +13,10 @@
     "ntt:init": "pnpm --filter @aurove/horizon-wormhole ntt:init",
     "ntt:deploy": "pnpm --filter @aurove/horizon-wormhole ntt:deploy",
     "deploy:cross-chain:testnet": "node scripts/deploy-horizon.mjs testnet",
-    "deploy:cross-chain:mainnet": "node scripts/deploy-horizon.mjs mainnet"
+    "deploy:cross-chain:mainnet": "node scripts/deploy-horizon.mjs mainnet",
+    "redeploy:cross-chain:testnet": "node scripts/deploy-horizon.mjs testnet --reset",
+    "redeploy:cross-chain:mainnet": "node scripts/deploy-horizon.mjs mainnet --reset",
+    "verify:cross-chain:testnet": "node scripts/verify-horizon.mjs testnet",
+    "verify:cross-chain:mainnet": "node scripts/verify-horizon.mjs mainnet"
   }
 }

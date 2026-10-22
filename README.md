@@ -218,6 +218,10 @@ The workspace provides root scripts for building and testing the contracts and i
 
 The end-to-end deployment entry points are `pnpm deploy:cross-chain:testnet` and `pnpm deploy:cross-chain:mainnet`. They deploy the Mezo vaults and Base peers, deploy/configure NTT, set per-token rate limits, and seal each spoke peer to its NTT Manager. See [`wormhole/README.md`](./wormhole/README.md) for required environment variables and safeguards.
 
+The deployment and redeployment workflows verify contracts on Mezo and Base/Base Sepolia, and use the NTT CLI's built-in Foundry verification for new NTT deployments and configuration updates. Set `BASESCAN_API_KEY` in `.env` for BaseScan verification. Run standalone verification against an existing deployment with `pnpm verify:cross-chain:testnet` or `pnpm verify:cross-chain:mainnet`; each package also has its own per-network verifier.
+
+For a fresh deployment across both submodules, set `CONFIRM_HORIZON_DEPLOYMENT=YES` and `CONFIRM_HORIZON_REDEPLOYMENT=YES`, then run `pnpm redeploy:cross-chain:testnet` (or `pnpm redeploy:cross-chain:mainnet`, which also requires `CONFIRM_HORIZON_MAINNET_DEPLOYMENT=YES`). This invokes each submodule's reset workflow, creates fresh contracts and NTT managers, then reconnects peers, applies limits, and seals the new VaultPeers. Hardhat deployment records and Wormhole NTT config files are replaced; previous contracts remain on-chain at their old addresses. See the package READMEs for standalone submodule commands.
+
 ## Buildathon Roadmap
 
 Horizon is being developed during the **2026 Mezo Buildathon on AKINDO**.
@@ -235,7 +239,8 @@ Horizon is being developed during the **2026 Mezo Buildathon on AKINDO**.
 - [x] Initialize NTT tooling, pin the CLI, and provide config initialization and deployment helpers.
 - [x] Implement the Base `VaultPeer` representation with an NTT-manager-only mint/burn boundary and one-time minter sealing.
 - [x] Add a modular Horizon deployment script for Mezo vaults, Base peers, NTT managers, peer configuration, limits, and minter handoff.
-- [ ] Execute the deployment and configure Mezo and Base endpoints on the target networks.
+- [x] Deploy and configure the testnet Mezo and Base Sepolia vault-share pairs and NTT managers.
+- [ ] Deploy and configure mainnet Mezo and Base endpoints.
 - [ ] Implement cross-chain transfer and settlement flows.
 - [ ] Run Mezo → Base → Mezo round-trip tests and verify backing and supply conservation.
 - [ ] Test return transfers and vault redemption.
@@ -255,7 +260,7 @@ Horizon is being developed during the **2026 Mezo Buildathon on AKINDO**.
 - [ ] Extend support to additional Aurove position classes.
 - [ ] Improve cross-chain liquidity management and integrations.
 
-Checked items describe implementation and test coverage in the repository. Network deployment, live NTT configuration, and bridge round-trip verification remain outstanding.
+Checked items describe implementation and test coverage in the repository. Mainnet deployment and bridge round-trip verification remain outstanding.
 
 ## Security Considerations
 
