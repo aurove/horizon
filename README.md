@@ -222,6 +222,16 @@ The deployment and redeployment workflows verify contracts on Mezo and Base/Base
 
 For a fresh deployment across both submodules, set `CONFIRM_HORIZON_DEPLOYMENT=YES` and `CONFIRM_HORIZON_REDEPLOYMENT=YES`, then run `pnpm redeploy:cross-chain:testnet` (or `pnpm redeploy:cross-chain:mainnet`, which also requires `CONFIRM_HORIZON_MAINNET_DEPLOYMENT=YES`). This invokes each submodule's reset workflow, creates fresh contracts and NTT managers, then reconnects peers, applies limits, and seals the new VaultPeers. Hardhat deployment records and Wormhole NTT config files are replaced; previous contracts remain on-chain at their old addresses. See the package READMEs for standalone submodule commands.
 
+### Testnet bridge round trip
+
+After the Mezo vaults, Base Sepolia peers, and NTT routes have been deployed and configured, run a small real transfer in both directions:
+
+```bash
+CONFIRM_HORIZON_TESTNET_ROUNDTRIP=YES pnpm bridge:roundtrip:testnet -- avBTCv 0.0001
+```
+
+Use `avBTCv` or `avMEZOv` and pass the amount explicitly. Set `HORIZON_ROUNDTRIP_PRIVATE_KEY` in the root `.env`; this dedicated signer must hold that many Mezo vault shares and have native gas on both Mezo testnet and Base Sepolia. The script passes this key to the NTT CLI as `ETH_PRIVATE_KEY`, so it is independent of the deployment signer. The amount must be within every configured NTT rate limit and use at most eight decimal places. The script checks chain IDs, deployment/config address consistency, the sealed Base peer minter, and starting balances before transferring. It waits until the destination balance changes before sending the return leg, then confirms both token balances return to their starting values. Set `HORIZON_ROUNDTRIP_TIMEOUT_SECONDS` to adjust the default one-hour timeout. A JSON receipt is saved under `reports/` when both legs pass. These are real testnet transfers; if a leg times out, inspect both on-chain balances before retrying.
+
 ## Buildathon Roadmap
 
 Horizon is being developed during the **2026 Mezo Buildathon on AKINDO**.
