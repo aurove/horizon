@@ -19,6 +19,7 @@
     "verify:cross-chain:testnet": "node scripts/verify-horizon.mjs testnet",
     "verify:cross-chain:mainnet": "node scripts/verify-horizon.mjs mainnet",
     "bridge:roundtrip:testnet": "pnpm --filter @aurove/horizon-wormhole exec node --import tsx ../scripts/bridge-roundtrip.ts",
+    "e2e:horizon-aero:testnet": "pnpm --filter @aurove/horizon-wormhole exec node --import tsx ../scripts/e2e-horizon-aero.ts",
     "compile:aero": "pnpm --filter @aurove/horizon-aero compile",
     "deploy:slipstream:base-sepolia": "pnpm --filter @aurove/horizon-aero deploy:slipstream:base-sepolia",
     "deploy:slipstream:base-sepolia:broadcast": "pnpm --filter @aurove/horizon-aero deploy:slipstream:base-sepolia:broadcast",

@@ -234,6 +234,20 @@ CONFIRM_HORIZON_TESTNET_ROUNDTRIP=YES pnpm bridge:roundtrip:testnet -- avBTCv 0.
 
 Use `avBTCv` or `avMEZOv` and pass the amount explicitly. Set `HORIZON_ROUNDTRIP_PRIVATE_KEY` in the root `.env`; this dedicated signer must hold that many Mezo vault shares and have native gas on both Mezo testnet and Base Sepolia. The script passes this key to the NTT CLI as `ETH_PRIVATE_KEY`, so it is independent of the deployment signer. The amount must be within every configured NTT rate limit and use at most eight decimal places. The script checks chain IDs, deployment/config address consistency, the sealed Base peer minter, and starting balances before transferring. It waits until the destination balance changes before sending the return leg, then confirms both token balances return to their starting values. Set `HORIZON_ROUNDTRIP_TIMEOUT_SECONDS` to adjust the default one-hour timeout. A JSON receipt is saved under `reports/` when both legs pass. These are real testnet transfers; if a leg times out, inspect both on-chain balances before retrying.
 
+### Wave 2 E2E (bridge → Aero swap/LP)
+
+Scripted path from Mezo vault shares to Base Sepolia Aerodrome Slipstream swap + LP:
+
+```bash
+# Dry-run (default): validate NTT + aero address books, print plan, write receipt
+pnpm e2e:horizon-aero:testnet -- avMEZOv 0.01
+
+# Live (requires Slipstream + DemoMUSD/pools on Base Sepolia)
+CONFIRM_HORIZON_E2E=YES pnpm e2e:horizon-aero:testnet -- avMEZOv 0.01
+```
+
+Set `HORIZON_E2E_PRIVATE_KEY` for live runs. Optional: `E2E_DEPOSIT_ASSETS` (Id20→vault before bridge), `E2E_SWAP_BPS` (default `5000`), `E2E_SKIP_BRIDGE=YES` (use existing peer balance). Receipts land at `reports/wave2-e2e-<timestamp>.json`. Dry-run succeeds even when Slipstream is not yet broadcast.
+
 ## Buildathon Roadmap
 
 Horizon is being developed during the **2026 Mezo Buildathon on AKINDO**.
@@ -261,6 +275,7 @@ Horizon is being developed during the **2026 Mezo Buildathon on AKINDO**.
 
 - [x] Scaffold minimal Aerodrome Slipstream stack for Base Sepolia (`@aurove/horizon-aero`).
 - [x] Add DemoMUSD + scripts to create/seed CL200 `avMEZOv`/`avBTCv` ↔ MUSD pools (broadcast gated).
+- [x] Add Wave 2 E2E script (Mezo deposit?/NTT → Base Aero swap + LP) with dry-run receipts.
 - [ ] Broadcast Slipstream + pools on Base Sepolia and verify swaps.
 - [ ] Implement liquidity provisioning and removal flows.
 - [ ] Build the end-to-end user experience.
