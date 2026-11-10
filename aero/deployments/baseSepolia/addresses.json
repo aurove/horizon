@@ -1,0 +1,17 @@
+{
+  "chainId": 84532,
+  "network": "baseSepolia",
+  "WETH": "0x4200000000000000000000000000000000000006",
+  "defaultTickSpacing": 200,
+  "deployed": false,
+  "MinimalFactoryRegistry": null,
+  "MinimalLegacyCLFactory": null,
+  "MinimalVoter": null,
+  "MinimalPositionDescriptor": null,
+  "PoolImplementation": null,
+  "PoolFactory": null,
+  "NonfungiblePositionManager": null,
+  "SwapRouter": null,
+  "QuoterV2": null,
+  "note": "Placeholder address book. Run pnpm deploy:slipstream:base-sepolia:broadcast once PRIVATE_KEY (or ETH_PRIVATE_KEY) and BASE_SEPOLIA_RPC_URL are set. Wave 2 scope: pools + swap + LP only (no gauges/veAERO)."
+}

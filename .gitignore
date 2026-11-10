@@ -1,3 +1,10 @@
 .DS_Store
 .env
 reports/
+
+# horizon-aero forge / node
+aero/out/
+aero/cache/
+aero/broadcast/
+aero/node_modules/
+node_modules/

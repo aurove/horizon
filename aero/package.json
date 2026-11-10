@@ -1,0 +1,22 @@
+{
+  "name": "@aurove/horizon-aero",
+  "version": "0.0.0",
+  "private": true,
+  "description": "Minimal Aerodrome Slipstream stack for Horizon Base Sepolia pools + swap + LP",
+  "scripts": {
+    "build": "forge build",
+    "compile": "forge build",
+    "clean": "forge clean",
+    "typecheck": "tsc --noEmit",
+    "deploy:slipstream:base-sepolia": "tsx scripts/deploy-slipstream-base-sepolia.ts",
+    "deploy:slipstream:base-sepolia:broadcast": "tsx scripts/deploy-slipstream-base-sepolia.ts --broadcast"
+  },
+  "devDependencies": {
+    "@types/node": "^25.6.0",
+    "dotenv": "^16.4.7",
+    "ethers": "^6.16.0",
+    "tsx": "^4.20.5",
+    "typescript": "^5.9.3"
+  },
+  "type": "module"
+}

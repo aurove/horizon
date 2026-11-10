@@ -7,7 +7,7 @@
     "test": "pnpm --filter @aurove/horizon-contracts test",
     "compile": "pnpm --filter @aurove/horizon-contracts compile",
     "clean": "pnpm --filter @aurove/horizon-contracts clean",
-    "typecheck": "pnpm --filter @aurove/horizon-contracts typecheck && pnpm --filter @aurove/horizon-wormhole typecheck",
+    "typecheck": "pnpm --filter @aurove/horizon-contracts typecheck && pnpm --filter @aurove/horizon-wormhole typecheck && pnpm --filter @aurove/horizon-aero typecheck",
     "ntt:commands": "pnpm --filter @aurove/horizon-wormhole exec tsx scripts/print-add-chain-commands.ts",
     "ntt:install": "pnpm --filter @aurove/horizon-wormhole ntt:install",
     "ntt:init": "pnpm --filter @aurove/horizon-wormhole ntt:init",
@@ -18,6 +18,8 @@
     "redeploy:cross-chain:mainnet": "node scripts/deploy-horizon.mjs mainnet --reset",
     "verify:cross-chain:testnet": "node scripts/verify-horizon.mjs testnet",
     "verify:cross-chain:mainnet": "node scripts/verify-horizon.mjs mainnet",
-    "bridge:roundtrip:testnet": "pnpm --filter @aurove/horizon-wormhole exec node --import tsx ../scripts/bridge-roundtrip.ts"
+    "bridge:roundtrip:testnet": "pnpm --filter @aurove/horizon-wormhole exec node --import tsx ../scripts/bridge-roundtrip.ts",
+    "compile:aero": "pnpm --filter @aurove/horizon-aero compile",
+    "deploy:slipstream:base-sepolia": "pnpm --filter @aurove/horizon-aero deploy:slipstream:base-sepolia"
   }
 }

@@ -1,0 +1,7 @@
+contracts/=slipstream/contracts/
+forge-std/=slipstream/lib/forge-std/src/
+ds-test/=slipstream/lib/forge-std/lib/ds-test/src/
+@openzeppelin/=slipstream/lib/openzeppelin-contracts/
+@nomad-xyz/=slipstream/lib/ExcessivelySafeCall/
+@uniswap/=slipstream/lib/solidity-lib/
+base64-sol/=slipstream/lib/base64/
