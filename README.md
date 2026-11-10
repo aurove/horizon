@@ -315,4 +315,6 @@ The long-term vision is a network of interoperable vault assets that allow locke
 
 ### License
 
-A license has not yet been declared in this repository. License terms and applicable third-party notices should be added before distribution or reuse.
+This repository is licensed under the [MIT License](./LICENSE). Solidity sources use `SPDX-License-Identifier: MIT`. Third-party dependencies retain their own licenses (for example OpenZeppelin MIT, forge-std dual Apache-2.0 / MIT).
+
+See [`SUBMISSION.md`](./SUBMISSION.md) for hackathon live URLs, public repos, testnet addresses, and judge-facing env vars (no secrets).
