@@ -1,0 +1,28 @@
+[profile.default]
+src = "src"
+script = "script"
+test = "test"
+out = "out"
+libs = ["slipstream/lib"]
+solc_version = "0.7.6"
+optimizer = true
+optimizer_runs = 200
+evm_version = "paris"
+fs_permissions = [{ access = "read-write", path = "./" }]
+
+# Gauge/veAERO stack intentionally out of Wave 2 compile path.
+skip = [
+  "slipstream/contracts/gauge/**",
+  "slipstream/contracts/test/**",
+  "slipstream/contracts/core/test/**",
+  "slipstream/contracts/periphery/test/**",
+  "slipstream/contracts/periphery/examples/**",
+  "slipstream/script/**",
+  "slipstream/test/**",
+]
+
+[rpc_endpoints]
+base_sepolia = "${BASE_SEPOLIA_RPC_URL}"
+
+[etherscan]
+base_sepolia = { key = "${BASESCAN_API_KEY}", url = "https://api-sepolia.basescan.org/api" }

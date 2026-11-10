@@ -4,3 +4,6 @@
 [submodule "wormhole"]
 	url = https://github.com/aurove/horizon-wormhole.git
 	path = wormhole
+[submodule "aero/slipstream"]
+	path = aero/slipstream
+	url = https://github.com/aerodrome-finance/slipstream.git
