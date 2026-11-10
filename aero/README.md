@@ -97,6 +97,18 @@ See `tsx scripts/deploy-slipstream-base-sepolia.ts --help` for step-by-step `for
 
 PR5 consumes this file to create/seed `avMEZOv/MUSD` and `avBTCv/MUSD` pools.
 
+
+## Pool create / LP / swap (for PR5)
+
+Slipstream has **no** `createAndInitializePoolIfNecessary`. Use either:
+
+1. `CLFactory.createPool(tokenA, tokenB, tickSpacing, sqrtPriceX96)`, then `NPM.mint` with `sqrtPriceX96 = 0`, or
+2. `NPM.mint` with **`sqrtPriceX96 != 0`** on the first mint (creates + initializes the pool).
+
+**Token ordering:** callers must pass **`token0 < token1`** (address sort) into `NPM.mint` / pool keys. Sorting is not done inside mint — unsorted tokens revert or compute the wrong pool address.
+
+Default demo tick spacing: **200**. Align `tickLower` / `tickUpper` to multiples of 200.
+
 ## Gaps / notes
 
 - Full official `DeployCL.s.sol` needs live Voter, FactoryRegistry, legacy factories, gauges, redistributor, and fee modules — intentionally not used here.

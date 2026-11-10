@@ -5,7 +5,8 @@
  * exits successfully without rebroadcasting unless --force is passed.
  *
  * Broadcast requires --broadcast plus PRIVATE_KEY (or ETH_PRIVATE_KEY) and
- * BASE_SEPOLIA_RPC_URL. Without --broadcast, runs forge build + script dry-run only.
+ * BASE_SEPOLIA_RPC_URL. Without --broadcast: forge build + forge script dry-run
+ * (no AERO_WRITE_ADDRESSES, so addresses.json is not overwritten).
  */
 import { spawnSync } from "node:child_process";
 import { existsSync, readFileSync, writeFileSync, mkdirSync } from "node:fs";
@@ -54,10 +55,11 @@ function readAddressBook(): AddressBook {
   return JSON.parse(readFileSync(ADDRESSES_PATH, "utf8")) as AddressBook;
 }
 
+/** Preserve 0x — forge vm.envUint("PRIVATE_KEY") requires a hex quantity with prefix. */
 function resolvePrivateKey(): string | undefined {
   const raw = process.env.PRIVATE_KEY || process.env.ETH_PRIVATE_KEY || process.env.PRIVATE_KEY_DEPLOY;
   if (!raw) return undefined;
-  return raw.startsWith("0x") ? raw.slice(2) : raw;
+  return raw.startsWith("0x") ? raw : `0x${raw}`;
 }
 
 function resolveRpcUrl(): string | undefined {
@@ -117,8 +119,8 @@ function main(): void {
   if (help) {
     console.log(`Usage: tsx scripts/deploy-slipstream-base-sepolia.ts [--broadcast] [--force]
 
-  (default)     forge build + forge script dry-run (no broadcast)
-  --broadcast   broadcast DeployMinimalCL to Base Sepolia
+  (default)     forge build + forge script dry-run (no broadcast, no address write)
+  --broadcast   broadcast DeployMinimalCL to Base Sepolia (writes addresses.json)
   --force       re-deploy even if addresses.json already has PoolFactory
 `);
     printForgeCreateRunbook();
@@ -148,15 +150,24 @@ function main(): void {
   console.log("Compiling @aurove/horizon-aero (solc 0.7.6)…");
   run("forge", ["build"], env);
 
+  // Anvil/local key only used so forge script can resolve PRIVATE_KEY during dry-run.
+  const dryRunKey =
+    pk || "0xac0974bec39a17e36ba4a6b4d238ff944bacb478cbed5efcae784d7bf4f2ff80";
+
   if (!broadcast) {
-    console.log("Dry-run only (no --broadcast). Scripts are ready.");
+    console.log("Dry-run: forge script without --broadcast (addresses.json not written).");
     if (!pk || !rpc) {
-      console.log("Missing PRIVATE_KEY/ETH_PRIVATE_KEY and/or BASE_SEPOLIA_RPC_URL — broadcast skipped.");
+      console.log("Missing PRIVATE_KEY/ETH_PRIVATE_KEY and/or BASE_SEPOLIA_RPC_URL — broadcast unavailable.");
     } else {
       console.log("Keys/RPC detected. Re-run with --broadcast to deploy on Base Sepolia.");
     }
-    printForgeCreateRunbook();
-    // Keep placeholder book stable for PR5 pool scripts.
+    env.PRIVATE_KEY = dryRunKey;
+    // Do NOT set AERO_WRITE_ADDRESSES — simulation must not poison the address book.
+    run(
+      "forge",
+      ["script", "script/DeployMinimalCL.s.sol:DeployMinimalCL", "-vv"],
+      env,
+    );
     if (!existsSync(ADDRESSES_PATH)) {
       writeFileSync(ADDRESSES_PATH, JSON.stringify(book, null, 2) + "\n");
     }
@@ -165,12 +176,13 @@ function main(): void {
 
   if (!pk || !rpc) {
     console.error("Broadcast requested but PRIVATE_KEY (or ETH_PRIVATE_KEY) and BASE_SEPOLIA_RPC_URL are required.");
-    printForgeCreateRunbook();
+    console.error("See --help for the manual forge create runbook.");
     process.exit(1);
   }
 
   env.PRIVATE_KEY = pk;
   env.BASE_SEPOLIA_RPC_URL = rpc;
+  env.AERO_WRITE_ADDRESSES = "1";
 
   run(
     "forge",
@@ -188,7 +200,6 @@ function main(): void {
 
   const updated = readAddressBook();
   if (!isDeployed({ ...updated, deployed: true })) {
-    // forge writeJson may omit deployed flag depending on serialization order
     updated.deployed = Boolean(updated.PoolFactory);
     updated.network = updated.network ?? "baseSepolia";
     writeFileSync(ADDRESSES_PATH, JSON.stringify(updated, null, 2) + "\n");

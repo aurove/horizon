@@ -16,9 +16,6 @@ importers:
       dotenv:
         specifier: ^16.4.7
         version: 16.6.1
-      ethers:
-        specifier: ^6.16.0
-        version: 6.17.0
       tsx:
         specifier: ^4.20.5
         version: 4.23.15

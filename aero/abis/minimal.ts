@@ -1,4 +1,12 @@
-/** Minimal ABIs for pool creation / swap / LP against a deployed Slipstream stack. */
+/**
+ * Minimal ABIs for pool creation / swap / LP against a deployed Slipstream stack.
+ *
+ * Intentional mint + swap surface only (no decreaseLiquidity / collect / burn).
+ * Slipstream has no Uniswap-style createAndInitializePoolIfNecessary — PR5 should:
+ *   1) sort token0 < token1
+ *   2) call factory.createPool(...) OR npm.mint with sqrtPriceX96 != 0 (creates+inits)
+ *   3) swap via SwapRouter.exactInputSingle
+ */
 
 export const ICLFactoryAbi = [
   "function getPool(address tokenA, address tokenB, int24 tickSpacing) view returns (address pool)",
@@ -24,7 +32,7 @@ export const ISwapRouterAbi = [
 
 export const INonfungiblePositionManagerAbi = [
   "function factory() view returns (address)",
-  "function createAndInitializePoolIfNecessary(address token0, address token1, int24 tickSpacing, uint160 sqrtPriceX96) payable returns (address pool)",
+  // Slipstream: pass sqrtPriceX96 != 0 on first mint to create+initialize the pool (no createAndInitializePoolIfNecessary).
   "function mint((address token0, address token1, int24 tickSpacing, int24 tickLower, int24 tickUpper, uint256 amount0Desired, uint256 amount1Desired, uint256 amount0Min, uint256 amount1Min, address recipient, uint256 deadline, uint160 sqrtPriceX96) params) payable returns (uint256 tokenId, uint128 liquidity, uint256 amount0, uint256 amount1)",
   "function positions(uint256 tokenId) view returns (uint96 nonce, address operator, address token0, address token1, int24 tickSpacing, int24 tickLower, int24 tickUpper, uint128 liquidity, uint256 feeGrowthInside0LastX128, uint256 feeGrowthInside1LastX128, uint128 tokensOwed0, uint128 tokensOwed1)",
 ] as const;
