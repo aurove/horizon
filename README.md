@@ -98,6 +98,8 @@ The intended cross-chain design maintains a backed representation of the origina
 
 On Base, bridged Horizon vault shares are intended to be paired with MUSD in Aerodrome liquidity pools.
 
+Canonical **mainnet** MUSD (Mezo / Ethereum / Base via Wormhole NTT): `0xdD468A1DDc392dcdbEf6db6e34E89AA338F9F186`. That contract is **not** deployed on Base Sepolia; Sepolia demos use `DemoMUSD` from `@aurove/horizon-aero` (`pnpm deploy:demo-musd`). See [`aero/README.md`](./aero/README.md) for CL200 pool create/seed scripts.
+
 Users will be able to trade these representations or provide liquidity without requiring the original veNFT positions to leave Mezo.
 
 ### 6. Return to Mezo
@@ -257,8 +259,9 @@ Horizon is being developed during the **2026 Mezo Buildathon on AKINDO**.
 
 ### Phase 3 — External Liquidity
 
-- [ ] Integrate bridged Horizon shares with Aerodrome.
-- [ ] Create initial vault-share/MUSD liquidity pools.
+- [x] Scaffold minimal Aerodrome Slipstream stack for Base Sepolia (`@aurove/horizon-aero`).
+- [x] Add DemoMUSD + scripts to create/seed CL200 `avMEZOv`/`avBTCv` ↔ MUSD pools (broadcast gated).
+- [ ] Broadcast Slipstream + pools on Base Sepolia and verify swaps.
 - [ ] Implement liquidity provisioning and removal flows.
 - [ ] Build the end-to-end user experience.
 - [ ] Demonstrate the complete Mezo → Base → Mezo lifecycle.

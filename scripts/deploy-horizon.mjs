@@ -1,7 +1,52 @@
 #!/usr/bin/env node
-import { CONTRACTS_PACKAGE, WORMHOLE_PACKAGE, loadRootEnv, normalizeLimit, requiredEnv, run } from "./lib/commands.mjs";
+import {
+  CONTRACTS_PACKAGE,
+  HORIZON_ROOT,
+  WORMHOLE_PACKAGE,
+  loadRootEnv,
+  normalizeLimit,
+  requiredEnv,
+  run,
+} from "./lib/commands.mjs";
 import { configureVaultPair, deployContracts, VAULTS } from "./lib/deployment.mjs";
 import { initializeNtt } from "./lib/ntt.mjs";
+
+const AERO_PACKAGE = "@aurove/horizon-aero";
+
+/**
+ * Optional post-step for Base Sepolia Slipstream + share/MUSD pools.
+ * Gated by HORIZON_RUN_AERO=YES. Never fails the main cross-chain deploy.
+ */
+function maybeRunAeroPools(testnet, env) {
+  if (!testnet) {
+    console.log("Skipping aero pool hook on mainnet (use aero scripts explicitly).");
+    return;
+  }
+  if (process.env.HORIZON_RUN_AERO !== "YES") {
+    console.log(
+      "Optional aero hook skipped (set HORIZON_RUN_AERO=YES to run Slipstream deploy + create-horizon-pools after NTT).",
+    );
+    return;
+  }
+  console.log("HORIZON_RUN_AERO=YES — attempting Slipstream deploy + Horizon pool create (non-fatal)…");
+  try {
+    run("pnpm", ["--filter", AERO_PACKAGE, "run", "deploy:slipstream:base-sepolia:broadcast"], env);
+  } catch (error) {
+    console.warn("Aero Slipstream deploy skipped/failed (continuing):", error instanceof Error ? error.message : error);
+    return;
+  }
+  try {
+    run("pnpm", ["--filter", AERO_PACKAGE, "run", "deploy:demo-musd:broadcast"], env);
+  } catch (error) {
+    console.warn("DemoMUSD deploy skipped/failed (continuing):", error instanceof Error ? error.message : error);
+  }
+  try {
+    run("pnpm", ["--filter", AERO_PACKAGE, "run", "create:horizon-pools:broadcast"], env);
+  } catch (error) {
+    console.warn("Horizon pool create skipped/failed (continuing):", error instanceof Error ? error.message : error);
+  }
+  console.log(`Aero address books under ${HORIZON_ROOT}/aero/deployments/baseSepolia/`);
+}
 
 function buildDeploymentEnvironment(testnet) {
   const privateKey = requiredEnv("ETH_PRIVATE_KEY");
@@ -85,6 +130,7 @@ function runDeployment(network, reset) {
     });
   }
   console.log(`\nHorizon ${network} deployment and NTT configuration completed.`);
+  maybeRunAeroPools(testnet, env);
 }
 
 try {

@@ -13,5 +13,7 @@
   "NonfungiblePositionManager": null,
   "SwapRouter": null,
   "QuoterV2": null,
-  "note": "Placeholder address book. Run pnpm deploy:slipstream:base-sepolia:broadcast once PRIVATE_KEY (or ETH_PRIVATE_KEY) and BASE_SEPOLIA_RPC_URL are set. Wave 2 scope: pools + swap + LP only (no gauges/veAERO)."
+  "DemoMUSD": null,
+  "MUSD": null,
+  "note": "Placeholder address book. Run pnpm deploy:slipstream:base-sepolia:broadcast once PRIVATE_KEY (or ETH_PRIVATE_KEY) and BASE_SEPOLIA_RPC_URL are set. Wave 2 scope: pools + swap + LP only (no gauges/veAERO). Canonical mainnet MUSD 0xdD468A1DDc392dcdbEf6db6e34E89AA338F9F186 is not on Base Sepolia — use deploy-demo-musd for demos."
 }

@@ -27,11 +27,18 @@ WETH (Base Sepolia): `0x4200000000000000000000000000000000000006`.
 ```
 aero/
 ├── slipstream/                 # git submodule (aerodrome-finance/slipstream)
-├── src/stubs/                  # Minimal voter/registry/legacy factory/descriptor
+├── src/stubs/                  # Minimal voter/registry/legacy factory/descriptor + DemoMUSD
 ├── script/DeployMinimalCL.s.sol
-├── scripts/deploy-slipstream-base-sepolia.ts
+├── scripts/
+│   ├── deploy-slipstream-base-sepolia.ts
+│   ├── deploy-demo-musd.ts
+│   ├── create-horizon-pools.ts
+│   ├── seed-horizon-lp.ts
+│   └── lib/horizon-pools.ts
 ├── abis/minimal.ts
-└── deployments/baseSepolia/addresses.json   # idempotent address book
+└── deployments/baseSepolia/
+    ├── addresses.json          # Slipstream + DemoMUSD address book
+    └── pools.json              # avMEZOv/MUSD + avBTCv/MUSD CL200 pools
 ```
 
 ## Prerequisites
@@ -95,10 +102,39 @@ See `tsx scripts/deploy-slipstream-base-sepolia.ts --help` for step-by-step `for
 - `NonfungiblePositionManager`, `SwapRouter`, `QuoterV2`
 - Stub addresses + `defaultTickSpacing: 200`
 
-PR5 consumes this file to create/seed `avMEZOv/MUSD` and `avBTCv/MUSD` pools.
+Pool scripts also read/write `deployments/baseSepolia/pools.json`.
 
+## MUSD on Base Sepolia
 
-## Pool create / LP / swap (for PR5)
+Canonical **mainnet** MUSD (Mezo / Ethereum / Base, Wormhole NTT):
+
+`0xdD468A1DDc392dcdbEf6db6e34E89AA338F9F186`
+
+That address has **no code on Base Sepolia** (Portal/Wormhole MUSD is mainnet-only). For Sepolia demos:
+
+```bash
+pnpm --filter @aurove/horizon-aero deploy:demo-musd            # dry-run
+pnpm --filter @aurove/horizon-aero deploy:demo-musd:broadcast  # writes DemoMUSD + MUSD into addresses.json
+```
+
+Override with `MUSD_ADDRESS=0x…` when a real testnet MUSD appears.
+
+## Create / seed Horizon share–MUSD pools
+
+Vault peers (Base Sepolia):
+
+| Share | Address |
+|---|---|
+| avMEZOvPeer | `0x2E9eAa58834c39a8bDe92886Cbf8A18954bFF855` |
+| avBTCvPeer | `0xb25912d67A8fb9C7Acb8b2eB4c1600aF7872D132` |
+
+```bash
+# After Slipstream (+ DemoMUSD) are recorded in addresses.json:
+pnpm --filter @aurove/horizon-aero create:horizon-pools            # dry-run → pools.json plan
+pnpm --filter @aurove/horizon-aero create:horizon-pools:broadcast  # CLFactory.createPool (tickSpacing 200)
+pnpm --filter @aurove/horizon-aero seed:horizon-lp                 # dry-run mint plan
+pnpm --filter @aurove/horizon-aero seed:horizon-lp:broadcast       # small full-range NPM.mint
+```
 
 Slipstream has **no** `createAndInitializePoolIfNecessary`. Use either:
 
@@ -108,6 +144,8 @@ Slipstream has **no** `createAndInitializePoolIfNecessary`. Use either:
 **Token ordering:** callers must pass **`token0 < token1`** (address sort) into `NPM.mint` / pool keys. Sorting is not done inside mint — unsorted tokens revert or compute the wrong pool address.
 
 Default demo tick spacing: **200**. Align `tickLower` / `tickUpper` to multiples of 200.
+
+Root orchestrator optional hook: set `HORIZON_RUN_AERO=YES` when running `pnpm deploy:cross-chain:testnet` to attempt Slipstream deploy + pool create after NTT setup. Missing keys or aero failures are logged and **do not** fail the cross-chain deploy.
 
 ## Gaps / notes
 

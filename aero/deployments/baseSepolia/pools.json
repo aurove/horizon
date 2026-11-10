@@ -1,0 +1,33 @@
+{
+  "chainId": 84532,
+  "network": "baseSepolia",
+  "tickSpacing": 200,
+  "musd": null,
+  "musdKind": null,
+  "canonicalMusdMainnet": "0xdD468A1DDc392dcdbEf6db6e34E89AA338F9F186",
+  "pools": [
+    {
+      "key": "avMEZOv-MUSD",
+      "share": "0x2E9eAa58834c39a8bDe92886Cbf8A18954bFF855",
+      "shareSymbol": "avMEZOv",
+      "musd": "",
+      "token0": "",
+      "token1": "",
+      "tickSpacing": 200,
+      "pool": null,
+      "sqrtPriceX96Init": "79228162514264337593543950336"
+    },
+    {
+      "key": "avBTCv-MUSD",
+      "share": "0xb25912d67A8fb9C7Acb8b2eB4c1600aF7872D132",
+      "shareSymbol": "avBTCv",
+      "musd": "",
+      "token0": "",
+      "token1": "",
+      "tickSpacing": 200,
+      "pool": null,
+      "sqrtPriceX96Init": "79228162514264337593543950336"
+    }
+  ],
+  "note": "PoolFactory not deployed yet. Deploy Slipstream, then DemoMUSD, then --broadcast."
+}

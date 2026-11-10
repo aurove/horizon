@@ -21,6 +21,12 @@
     "bridge:roundtrip:testnet": "pnpm --filter @aurove/horizon-wormhole exec node --import tsx ../scripts/bridge-roundtrip.ts",
     "compile:aero": "pnpm --filter @aurove/horizon-aero compile",
     "deploy:slipstream:base-sepolia": "pnpm --filter @aurove/horizon-aero deploy:slipstream:base-sepolia",
-    "deploy:slipstream:base-sepolia:broadcast": "pnpm --filter @aurove/horizon-aero deploy:slipstream:base-sepolia:broadcast"
+    "deploy:slipstream:base-sepolia:broadcast": "pnpm --filter @aurove/horizon-aero deploy:slipstream:base-sepolia:broadcast",
+    "deploy:demo-musd": "pnpm --filter @aurove/horizon-aero deploy:demo-musd",
+    "deploy:demo-musd:broadcast": "pnpm --filter @aurove/horizon-aero deploy:demo-musd:broadcast",
+    "create:horizon-pools": "pnpm --filter @aurove/horizon-aero create:horizon-pools",
+    "create:horizon-pools:broadcast": "pnpm --filter @aurove/horizon-aero create:horizon-pools:broadcast",
+    "seed:horizon-lp": "pnpm --filter @aurove/horizon-aero seed:horizon-lp",
+    "seed:horizon-lp:broadcast": "pnpm --filter @aurove/horizon-aero seed:horizon-lp:broadcast"
   }
 }
