@@ -35,6 +35,7 @@ aero/
 │   ├── create-horizon-pools.ts
 │   ├── seed-horizon-lp.ts
 │   └── lib/horizon-pools.ts
+├── docs/mainnet-pools.md       # Base mainnet CL200 av*v/MUSD ops runbook
 ├── abis/minimal.ts
 └── deployments/baseSepolia/
     ├── addresses.json          # Slipstream + DemoMUSD address book
@@ -118,6 +119,8 @@ pnpm --filter @aurove/horizon-aero deploy:demo-musd:broadcast  # writes DemoMUSD
 ```
 
 Override with `MUSD_ADDRESS=0x…` when a real testnet MUSD appears.
+
+**Mainnet pools:** Sepolia uses DemoMUSD; Base mainnet uses canonical MUSD against production Aerodrome Slipstream. Operator runbook: [`docs/mainnet-pools.md`](./docs/mainnet-pools.md).
 
 ## Create / seed Horizon share–MUSD pools
 
