@@ -24,6 +24,14 @@ Skeleton for Mezo Buildathon / AKINDO judges. Fill remaining placeholders before
 
 ## Contract addresses (testnet)
 
+Full registry with explorer links and verification runbook: [`docs/address-registry.md`](./docs/address-registry.md).
+
+Print the same table from deployment JSON:
+
+```bash
+pnpm addresses:testnet
+```
+
 Sources: `contracts/deployments/{testnet,baseSepolia}/` and `wormhole/vaults/*/testnet/deployment.json`.
 
 ### Mezo testnet — Horizon vaults
@@ -74,6 +82,19 @@ Underlying Id20 assets (from vault `linkedData`):
 
 Deployer / NTT owner (testnet): `0x6E1126EA838DA392A55D8DdeD9bADEccA5835114`
 
+### Verification (testnet)
+
+```bash
+pnpm verify:cross-chain:testnet
+```
+
+Runs Mezo (Blockscout) + Base Sepolia (Basescan) Hardhat verify, then NTT Foundry verify. Needs RPC URLs (defaults in `.env.example`) and `BASESCAN_API_KEY` or `ETHERSCAN_API_KEY` for Base / NTT Base steps. Mezo Blockscout does not need an API key. Confirm verified source on:
+
+- Mezo: https://explorer.test.mezo.org/address/{address}#code
+- Base Sepolia: https://sepolia.basescan.org/address/{address}#code
+
+If keys or the NTT CLI Foundry checkout are missing, keep the command ready and treat live verify as optional for this submission — see [`docs/address-registry.md`](./docs/address-registry.md#contract-verification-runbook).
+
 ## Demo transactions
 
 | Flow | Explorer link | Notes |
@@ -113,11 +134,13 @@ Useful judge commands (no signing):
 ```bash
 pnpm install
 pnpm test
-pnpm verify:cross-chain:testnet   # needs RPC URLs; optional BASESCAN_API_KEY
+pnpm addresses:testnet            # print registry from deployment JSON
+pnpm verify:cross-chain:testnet   # needs RPC URLs; BASESCAN_API_KEY for Base Sepolia / NTT
 ```
 
 Addresses above are also readable from:
 
+- [`docs/address-registry.md`](./docs/address-registry.md)
 - `contracts/deployments/testnet/`
 - `contracts/deployments/baseSepolia/`
 - `wormhole/vaults/avBTCv/testnet/deployment.json`
@@ -144,6 +167,7 @@ Server-only secrets (`SUPABASE_SERVICE_ROLE_KEY`, `DATABASE_URL`, `CRON_INTERNAL
 - [x] README license section updated
 - [x] `"license": "MIT"` on root / contracts / wormhole `package.json`
 - [x] Live URL guidance: prefer public custom domains; document former SSO on `*.vercel.app` + disable attempt; document local dApp run path
+- [x] Address registry + `pnpm verify:cross-chain:testnet` runbook (`docs/address-registry.md`)
 - [ ] Demo tx hashes / explorer links filled in
 - [ ] Team table filled in
 - [ ] Demo video linked

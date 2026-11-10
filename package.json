@@ -19,6 +19,8 @@
     "redeploy:cross-chain:mainnet": "node scripts/deploy-horizon.mjs mainnet --reset",
     "verify:cross-chain:testnet": "node scripts/verify-horizon.mjs testnet",
     "verify:cross-chain:mainnet": "node scripts/verify-horizon.mjs mainnet",
+    "addresses:testnet": "node scripts/print-address-registry.mjs testnet",
+    "addresses:mainnet": "node scripts/print-address-registry.mjs mainnet",
     "bridge:roundtrip:testnet": "pnpm --filter @aurove/horizon-wormhole exec node --import tsx ../scripts/bridge-roundtrip.ts"
   }
 }
