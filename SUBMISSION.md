@@ -6,9 +6,14 @@ Skeleton for Mezo Buildathon / AKINDO judges. Fill remaining placeholders before
 
 | Surface | URL | Notes |
 | --- | --- | --- |
-| dApp (Vercel) | https://mezo-fractals-eldra-efc19f6f.vercel.app | Homepage set on `aurove/dapp` |
+| dApp (production) | https://www.aurove.xyz | Public (HTTP 200) — prefer this for judges |
+| dApp (testnet) | https://testnet.aurove.xyz | Public (HTTP 200) |
+| dApp (Vercel deployment hostname) | https://mezo-fractals-eldra-efc19f6f.vercel.app | Was behind Deployment Protection / SSO (`/sso-api`). SSO disabled 2026-11-10 via `vercel project protection disable mezo-fractals --sso` (`ssoProtection: null`); hostname now returns HTTP 200. Still prefer custom domains above. |
+| Local dApp (fallback) | Clone https://github.com/aurove/dapp then `pnpm install && pnpm --filter @aurove/dapp dev` (or `pnpm dev` from that repo root) | Use for local wallet flows or if hosted URLs change |
 | Demo video | _TBD_ | Link walkthrough once recorded |
 | Pitch / deck | _TBD_ | Optional |
+
+> **Judge note:** Prefer `https://www.aurove.xyz` or `https://testnet.aurove.xyz`. The `*.vercel.app` hostname is currently public after SSO was turned off; if it ever redirects to Vercel SSO again, run the public dApp locally from https://github.com/aurove/dapp.
 
 ## Public repos
 
@@ -129,7 +134,7 @@ Public client vars only (from that repo’s `.env.example`). Never commit servic
 | `NEXT_PUBLIC_APP_ENV` | `local` / testnet / production selector |
 | `NEXT_PUBLIC_SUPABASE_URL` / `NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY` | Public Supabase client (if features need them) |
 
-Server-only secrets (`SUPABASE_SERVICE_ROLE_KEY`, `DATABASE_URL`, `CRON_INTERNAL_SECRET`, `EVENTS_WEBHOOK_SECRET`, `PYTH_HERMES_API_KEY`, private keys) are **not** required for UI walkthroughs against the live Vercel deployment.
+Server-only secrets (`SUPABASE_SERVICE_ROLE_KEY`, `DATABASE_URL`, `CRON_INTERNAL_SECRET`, `EVENTS_WEBHOOK_SECRET`, `PYTH_HERMES_API_KEY`, private keys) are **not** required for UI walkthroughs against the live custom-domain deployments (`www.aurove.xyz` / `testnet.aurove.xyz`) or a local `pnpm --filter @aurove/dapp dev` run.
 
 ## Publish checklist
 
@@ -137,6 +142,8 @@ Server-only secrets (`SUPABASE_SERVICE_ROLE_KEY`, `DATABASE_URL`, `CRON_INTERNAL
 - [x] Horizon repo public
 - [x] MIT `LICENSE` at horizon root
 - [x] README license section updated
+- [x] `"license": "MIT"` on root / contracts / wormhole `package.json`
+- [x] Live URL guidance: prefer public custom domains; document former SSO on `*.vercel.app` + disable attempt; document local dApp run path
 - [ ] Demo tx hashes / explorer links filled in
 - [ ] Team table filled in
 - [ ] Demo video linked
