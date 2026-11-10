@@ -19,8 +19,9 @@ Verified against parent monorepo `scripts/lib/aero-musd-mezo-liquidity.ts` / `ae
 |---|---|
 | CL factory | `0x9CB220581b91b0C83223012FE69688b92aD07a76` |
 | Swap router | `0x9Ee35Bf1bd69a03c6F0393582030fCe8Bb93D418` |
+| NonfungiblePositionManager | `0x4857DB576eE0e45F10525eC59527BfD10beeC60b` |
 
-NPM is read from the pool (`pool.nft()`) after create; do not assume a Sepolia stub NPM on mainnet.
+Use this NPM for create+seed minting. Do **not** rely on `pool.nft()` — it stays `address(0)` until gauge setup. Do not use the Sepolia stub NPM on mainnet.
 
 ## Pool parameters
 
@@ -44,9 +45,9 @@ Unsorted keys revert or resolve the wrong pool.
 1. Confirm factory has tick spacing `200` enabled.
 2. `getPool(token0, token1, 200)` — skip create if already non-zero.
 3. `CLFactory.createPool(tokenA, tokenB, 200, sqrtPriceX96)` with a deliberate init price (demo scripts use tick-0 / 1:1 `79228162514264337593543950336`; production should match expected share/MUSD spot).
-4. Seed LP via official NPM `mint` (`sqrtPriceX96 = 0` once the pool is initialized). Align `tickLower` / `tickUpper` to multiples of `200`.
+4. Seed LP via NPM `0x4857DB576eE0e45F10525eC59527BfD10beeC60b` `mint` (`sqrtPriceX96 = 0` once the pool is initialized). Align `tickLower` / `tickUpper` to multiples of `200`.
 
-Sepolia helpers (`create-horizon-pools`, `seed-horizon-lp`) target the **minimal** Sepolia Slipstream + DemoMUSD stack. On mainnet, call the ops factory/router above (or mirror those scripts with mainnet addresses + canonical MUSD).
+Sepolia helpers (`create-horizon-pools`, `seed-horizon-lp`) target the **minimal** Sepolia Slipstream + DemoMUSD stack. On mainnet, call the ops factory / router / NPM above (or mirror those scripts with mainnet addresses + canonical MUSD).
 
 ## Gauge listing (follow-on)
 
