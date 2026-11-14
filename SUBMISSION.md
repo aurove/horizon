@@ -28,7 +28,7 @@ Sources: `contracts/deployments/{testnet,baseSepolia}/` and `wormhole/vaults/*/t
 
 ### Mezo testnet — Horizon vaults
 
-Redeployed 2026-11-10 (dual-ABI Vault + dead-share seed path; seed skipped — deployer Id20 balance was 0).
+Redeployed 2026-11-10 (dual-ABI Vault + dead-share seed path). Dead shares seeded later from deployer Id20 (`1e12` assets → `0x…dEaD` on both vaults).
 
 | Contract | Address | Explorer |
 | --- | --- | --- |
