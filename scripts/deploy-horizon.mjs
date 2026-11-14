@@ -1,4 +1,5 @@
 #!/usr/bin/env node
+import { readFileSync } from "node:fs";
 import {
   CONTRACTS_PACKAGE,
   HORIZON_ROOT,
@@ -35,10 +36,26 @@ function maybeRunAeroPools(testnet, env) {
     console.warn("Aero Slipstream deploy skipped/failed (continuing):", error instanceof Error ? error.message : error);
     return;
   }
-  try {
-    run("pnpm", ["--filter", AERO_PACKAGE, "run", "deploy:demo-musd:broadcast"], env);
-  } catch (error) {
-    console.warn("DemoMUSD deploy skipped/failed (continuing):", error instanceof Error ? error.message : error);
+  // Prefer a real Base Sepolia MUSD (MUSD_ADDRESS / address book) over DemoMUSD.
+  const hasMusd =
+    Boolean(process.env.MUSD_ADDRESS?.trim()) ||
+    (() => {
+      try {
+        const bookPath = `${HORIZON_ROOT}/aero/deployments/baseSepolia/addresses.json`;
+        const book = JSON.parse(readFileSync(bookPath, "utf8"));
+        return Boolean(book.MUSD && book.MUSD !== "0x0000000000000000000000000000000000000000");
+      } catch {
+        return false;
+      }
+    })();
+  if (hasMusd) {
+    console.log("Skipping DemoMUSD — MUSD_ADDRESS or address-book MUSD is set.");
+  } else {
+    try {
+      run("pnpm", ["--filter", AERO_PACKAGE, "run", "deploy:demo-musd:broadcast"], env);
+    } catch (error) {
+      console.warn("DemoMUSD deploy skipped/failed (continuing):", error instanceof Error ? error.message : error);
+    }
   }
   try {
     run("pnpm", ["--filter", AERO_PACKAGE, "run", "create:horizon-pools:broadcast"], env);

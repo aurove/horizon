@@ -27,14 +27,44 @@ export function deployContracts(testnet, env) {
       requireAddress(readJson(path).address, `existing contract in ${path}`);
     }
     console.log("Skipping contract deployment; existing deployment records were validated.");
-    run("pnpm", ["--filter", CONTRACTS_PACKAGE, "run", `verify:${network}`], env);
-    run("pnpm", ["--filter", CONTRACTS_PACKAGE, "run", `verify:${testnet ? "base-sepolia" : "base"}`], env);
+    if (env.HORIZON_SKIP_VERIFY === "YES") {
+      console.log("Skipping contract verification (HORIZON_SKIP_VERIFY=YES).");
+      return;
+    }
+    const verifyEnv = {
+      ...env,
+      HORIZON_VERIFY_SOFT_FAIL: env.HORIZON_VERIFY_SOFT_FAIL || "YES",
+    };
+    try {
+      run("pnpm", ["--filter", CONTRACTS_PACKAGE, "run", `verify:${network}`], verifyEnv);
+    } catch (error) {
+      console.warn("Hub verify failed (continuing):", error instanceof Error ? error.message : error);
+    }
+    try {
+      run(
+        "pnpm",
+        ["--filter", CONTRACTS_PACKAGE, "run", `verify:${testnet ? "base-sepolia" : "base"}`],
+        verifyEnv,
+      );
+    } catch (error) {
+      console.warn("Spoke verify failed (continuing):", error instanceof Error ? error.message : error);
+    }
     return;
   }
-  run("pnpm", ["--filter", CONTRACTS_PACKAGE, "exec", "hardhat", "deploy", "--tags", "VaultFactory,Vaults", "--network", network], env);
-  run("pnpm", ["--filter", CONTRACTS_PACKAGE, "exec", "hardhat", "deploy", "--tags", "VaultPeers", "--network", peerNetwork], env);
-  run("pnpm", ["--filter", CONTRACTS_PACKAGE, "run", `verify:${network}`], env);
-  run("pnpm", ["--filter", CONTRACTS_PACKAGE, "run", `verify:${testnet ? "base-sepolia" : "base"}`], env);
+  run("pnpm", ["--filter", CONTRACTS_PACKAGE, "run", "hh", "deploy", "--tags", "VaultFactory,Vaults", "--network", network], env);
+  run(
+    "pnpm",
+    ["--filter", CONTRACTS_PACKAGE, "run", "hh", "deploy", "--tags", "VaultPeers", "--network", peerNetwork],
+    env,
+  );
+  run("pnpm", ["--filter", CONTRACTS_PACKAGE, "run", `verify:${network}`], {
+    ...env,
+    HORIZON_VERIFY_SOFT_FAIL: env.HORIZON_VERIFY_SOFT_FAIL || "YES",
+  });
+  run("pnpm", ["--filter", CONTRACTS_PACKAGE, "run", `verify:${testnet ? "base-sepolia" : "base"}`], {
+    ...env,
+    HORIZON_VERIFY_SOFT_FAIL: env.HORIZON_VERIFY_SOFT_FAIL || "YES",
+  });
 }
 
 export function configureVaultPair({ testnet, nttNetwork, hubChain, spokeChain, nttPath, vaultSpec, limit, env }) {
@@ -55,6 +85,22 @@ export function configureVaultPair({ testnet, nttNetwork, hubChain, spokeChain, 
   configureLimits(deploymentPath, hubChain, spokeChain, limit);
   pushAndVerifyNtt(deploymentPath, env);
 
-  run("pnpm", ["--filter", CONTRACTS_PACKAGE, "exec", "hardhat", "vault-peer:set-minter", "--network", peerNetwork, "--peer", spokeToken, "--manager", spokeManager], env);
+  run(
+    "pnpm",
+    [
+      "--filter",
+      CONTRACTS_PACKAGE,
+      "run",
+      "hh",
+      "vault-peer:set-minter",
+      "--network",
+      peerNetwork,
+      "--peer",
+      spokeToken,
+      "--manager",
+      spokeManager,
+    ],
+    env,
+  );
   console.log(`${vaultSpec.symbol}: hub manager ${hubManager}; spoke manager ${spokeManager}; peer minter sealed`);
 }

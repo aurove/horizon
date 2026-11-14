@@ -2,32 +2,32 @@
   "chainId": 84532,
   "network": "baseSepolia",
   "tickSpacing": 200,
-  "musd": null,
-  "musdKind": null,
+  "musd": "0x560985f804De8187E8FBA94F7127Bc4c0e54AEA5",
+  "musdKind": "env",
   "canonicalMusdMainnet": "0xdD468A1DDc392dcdbEf6db6e34E89AA338F9F186",
   "pools": [
     {
       "key": "avMEZOv-MUSD",
-      "share": "0x2E9eAa58834c39a8bDe92886Cbf8A18954bFF855",
+      "share": "0x172096f3F0F98B9dc1302695A48044D6A3D799C9",
       "shareSymbol": "avMEZOv",
-      "musd": "",
-      "token0": "",
-      "token1": "",
+      "musd": "0x560985f804De8187E8FBA94F7127Bc4c0e54AEA5",
+      "token0": "0x172096f3F0F98B9dc1302695A48044D6A3D799C9",
+      "token1": "0x560985f804De8187E8FBA94F7127Bc4c0e54AEA5",
       "tickSpacing": 200,
-      "pool": null,
+      "pool": "0xD084DB8cBbE7865d4dAcaF35e4a4A6a436D0EEe8",
       "sqrtPriceX96Init": "79228162514264337593543950336"
     },
     {
       "key": "avBTCv-MUSD",
-      "share": "0xb25912d67A8fb9C7Acb8b2eB4c1600aF7872D132",
+      "share": "0x0d36e2B7350950662859A82A91E13Ad7d0E594E0",
       "shareSymbol": "avBTCv",
-      "musd": "",
-      "token0": "",
-      "token1": "",
+      "musd": "0x560985f804De8187E8FBA94F7127Bc4c0e54AEA5",
+      "token0": "0x0d36e2B7350950662859A82A91E13Ad7d0E594E0",
+      "token1": "0x560985f804De8187E8FBA94F7127Bc4c0e54AEA5",
       "tickSpacing": 200,
-      "pool": null,
+      "pool": "0x95D890750550791E44a1d1f4986443d51696BdA5",
       "sqrtPriceX96Init": "79228162514264337593543950336"
     }
   ],
-  "note": "PoolFactory not deployed yet. Deploy Slipstream, then DemoMUSD, then --broadcast."
+  "note": "CL200 vault-share/MUSD pools on minimal Slipstream (Base Sepolia)."
 }

@@ -28,11 +28,15 @@ Sources: `contracts/deployments/{testnet,baseSepolia}/` and `wormhole/vaults/*/t
 
 ### Mezo testnet — Horizon vaults
 
-| Contract | Address |
-| --- | --- |
-| VaultFactory | `0x5f6AcDD6390f0C93e93482A917d8798376F56e17` |
-| avBTC Vault (`avBTCv`) | `0xb4122E019693A7A7c470519093599D0c45f7CF12` |
-| avMEZO Vault (`avMEZOv`) | `0xe65dA484Ec0820b4E9c8be731D38E27368b4aAC6` |
+Redeployed 2026-11-10 (dual-ABI Vault + dead-share seed path; seed skipped — deployer Id20 balance was 0).
+
+| Contract | Address | Explorer |
+| --- | --- | --- |
+| VaultFactory | `0x48E6cF84FFEd65AeB7Ee560123065606Df4D1f99` | [Blockscout verified](https://explorer.test.mezo.org/address/0x48E6cF84FFEd65AeB7Ee560123065606Df4D1f99#code) |
+| avBTC Vault (`avBTCv`) | `0x8e95C83A5144dcdD6ce79D7fBd58057b689f086f` | [Sourcify verified](https://repo.sourcify.dev/31611/0x8e95C83A5144dcdD6ce79D7fBd58057b689f086f) · [explorer](https://explorer.test.mezo.org/address/0x8e95C83A5144dcdD6ce79D7fBd58057b689f086f) |
+| avMEZO Vault (`avMEZOv`) | `0x2C45a18a23d5bfFf3Fc0c4Bff6376dA1d943373c` | [Sourcify verified](https://repo.sourcify.dev/31611/0x2C45a18a23d5bfFf3Fc0c4Bff6376dA1d943373c) · [explorer](https://explorer.test.mezo.org/address/0x2C45a18a23d5bfFf3Fc0c4Bff6376dA1d943373c) |
+
+Factory-created vaults are verified on Sourcify. Mezo Blockscout still reports “not a smart-contract” for those CREATE addresses even though RPC bytecode and Sourcify matches are live.
 
 Underlying Id20 assets (from vault `linkedData`):
 
@@ -41,12 +45,19 @@ Underlying Id20 assets (from vault `linkedData`):
 | avBTC Id20 | `0xf2aeB53d71CD541EFeaA37788F0841D7d21612F9` |
 | avMEZO Id20 | `0x0aeDdEaB271Bc032d6758c34Dc8356632D6F812e` |
 
-### Base Sepolia — VaultPeer tokens
+### Base Sepolia — VaultPeer tokens + MUSD + Aero
 
-| Contract | Address |
-| --- | --- |
-| avBTCv peer | `0xb25912d67A8fb9C7Acb8b2eB4c1600aF7872D132` |
-| avMEZOv peer | `0x2E9eAa58834c39a8bDe92886Cbf8A18954bFF855` |
+| Contract | Address | Explorer |
+| --- | --- | --- |
+| avBTCv peer | `0x0d36e2B7350950662859A82A91E13Ad7d0E594E0` | [verified](https://sepolia.basescan.org/address/0x0d36e2B7350950662859A82A91E13Ad7d0E594E0#code) |
+| avMEZOv peer | `0x172096f3F0F98B9dc1302695A48044D6A3D799C9` | [verified](https://sepolia.basescan.org/address/0x172096f3F0F98B9dc1302695A48044D6A3D799C9#code) |
+| MUSD (pinned) | `0x560985f804De8187E8FBA94F7127Bc4c0e54AEA5` | [token](https://sepolia.basescan.org/address/0x560985f804De8187E8FBA94F7127Bc4c0e54AEA5) |
+| HorizonDestinationExecutor | `0xA874C686D513B079A02399B4dAFC36669C23Ad5b` | [verified](https://sepolia.basescan.org/address/0xA874C686D513B079A02399B4dAFC36669C23Ad5b#code) |
+| Slipstream PoolFactory | `0x6e8614B6f32145D680209a4959153f36BD208b85` | [address](https://sepolia.basescan.org/address/0x6e8614B6f32145D680209a4959153f36BD208b85) |
+| NonfungiblePositionManager | `0xB0D6450Ed37Da105B7ea3cd29D1256616DaA9B5F` | [address](https://sepolia.basescan.org/address/0xB0D6450Ed37Da105B7ea3cd29D1256616DaA9B5F) |
+| SwapRouter | `0xE056f7fF35B952E7BE7D78b8F68c0F293fB6E6Ba` | [address](https://sepolia.basescan.org/address/0xE056f7fF35B952E7BE7D78b8F68c0F293fB6E6Ba) |
+| avMEZOv–MUSD CL200 pool | `0xD084DB8cBbE7865d4dAcaF35e4a4A6a436D0EEe8` | [address](https://sepolia.basescan.org/address/0xD084DB8cBbE7865d4dAcaF35e4a4A6a436D0EEe8) |
+| avBTCv–MUSD CL200 pool | `0x95D890750550791E44a1d1f4986443d51696BdA5` | [address](https://sepolia.basescan.org/address/0x95D890750550791E44a1d1f4986443d51696BdA5) |
 
 ### Wormhole NTT (testnet)
 
@@ -54,25 +65,25 @@ Underlying Id20 assets (from vault `linkedData`):
 
 | Chain | Role | Address |
 | --- | --- | --- |
-| Mezo | NTT manager (locking) | `0x7F47719ca9B033843e575fA49F847220337De151` |
-| Mezo | Wormhole transceiver | `0xE17A087AbCf0a45072d110078E1937911d4829E7` |
-| Mezo | Token (vault) | `0xb4122E019693A7A7c470519093599D0c45f7CF12` |
-| BaseSepolia | NTT manager (burning) | `0x862f45A57f83393AC5a01c5860DF2A5e051501C4` |
-| BaseSepolia | Wormhole transceiver | `0xf22EaAecdA0E2144154a964C2294549a3Ba999C4` |
-| BaseSepolia | Token (peer) | `0xb25912d67A8fb9C7Acb8b2eB4c1600aF7872D132` |
+| Mezo | NTT manager (locking) | `0x01B2C64505f367203429753029EA8BEB66987a09` |
+| Mezo | Wormhole transceiver | `0xA21328Abc178E1b47eC9A14f40e7100372678d10` |
+| Mezo | Token (vault) | `0x8e95C83A5144dcdD6ce79D7fBd58057b689f086f` |
+| BaseSepolia | NTT manager (burning) | `0x96e12AD5F0402a458823A8E2A6Ea0E986DCD358e` |
+| BaseSepolia | Wormhole transceiver | `0x82C8d99f67eB28b023387236051cB292c9A477AA` |
+| BaseSepolia | Token (peer) | `0x0d36e2B7350950662859A82A91E13Ad7d0E594E0` |
 
 #### avMEZOv
 
 | Chain | Role | Address |
 | --- | --- | --- |
-| Mezo | NTT manager (locking) | `0x0F909054b03dBfAd5212c2209051F37CD3e582c9` |
-| Mezo | Wormhole transceiver | `0xF1E1Fa9dBa06D8Ce388d48492bf45616d7eF61fB` |
-| Mezo | Token (vault) | `0xe65dA484Ec0820b4E9c8be731D38E27368b4aAC6` |
-| BaseSepolia | NTT manager (burning) | `0xe97416e5Cac85493Eee13ecc165275Dcb8A5bDed` |
-| BaseSepolia | Wormhole transceiver | `0xA64616831f8B430469E9101F35Ba778a485d3848` |
-| BaseSepolia | Token (peer) | `0x2E9eAa58834c39a8bDe92886Cbf8A18954bFF855` |
+| Mezo | NTT manager (locking) | `0x2a0B2726f7822cEBdE9D665D049a42f13Fa6A517` |
+| Mezo | Wormhole transceiver | `0x6201F4c88aAfDd627108467dafA81464E3eb885a` |
+| Mezo | Token (vault) | `0x2C45a18a23d5bfFf3Fc0c4Bff6376dA1d943373c` |
+| BaseSepolia | NTT manager (burning) | `0x79D11c9d7F5d5ef676c4c87Cf9deEC5D972bd8A1` |
+| BaseSepolia | Wormhole transceiver | `0x9383b1ACAf2bD2B0F6b205Be9fFbCcBfC78A8300` |
+| BaseSepolia | Token (peer) | `0x172096f3F0F98B9dc1302695A48044D6A3D799C9` |
 
-Deployer / NTT owner (testnet): `0x6E1126EA838DA392A55D8DdeD9bADEccA5835114`
+Deployer / NTT owner (testnet): `0x6E1126EA838DA392A55D8DdeD9bADEccA5835114`. VaultPeer minters sealed to spoke NTT managers; peer ownership renounced.
 
 ## Demo transactions
 

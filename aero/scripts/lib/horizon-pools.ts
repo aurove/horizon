@@ -17,12 +17,38 @@ export const POOLS_PATH = join(AERO_ROOT, "deployments", "baseSepolia", "pools.j
 loadEnv({ path: join(HORIZON_ROOT, ".env") });
 loadEnv({ path: join(AERO_ROOT, ".env") });
 
-/** Base Sepolia VaultPeer tokens (from contracts/deployments/baseSepolia). */
-export const AV_MEZOV_PEER = getAddress("0x2E9eAa58834c39a8bDe92886Cbf8A18954bFF855");
-export const AV_BTCV_PEER = getAddress("0xb25912d67A8fb9C7Acb8b2eB4c1600aF7872D132");
+export function isNonZeroAddress(value: string | null | undefined): value is string {
+  return Boolean(value && value !== ZeroAddress && /^0x[0-9a-fA-F]{40}$/.test(value));
+}
+
+const CONTRACTS_BASE_SEPOLIA = join(HORIZON_ROOT, "contracts", "deployments", "baseSepolia");
+
+/** Fallback peers if Hardhat deployment artifacts are missing (pre-redeploy defaults). */
+const FALLBACK_AV_MEZOV_PEER = "0x2E9eAa58834c39a8bDe92886Cbf8A18954bFF855";
+const FALLBACK_AV_BTCV_PEER = "0xb25912d67A8fb9C7Acb8b2eB4c1600aF7872D132";
+
+function readPeerAddress(artifactName: string, fallback: string): string {
+  const path = join(CONTRACTS_BASE_SEPOLIA, `${artifactName}.json`);
+  if (existsSync(path)) {
+    try {
+      const raw = JSON.parse(readFileSync(path, "utf8")) as { address?: string };
+      if (isNonZeroAddress(raw.address)) return getAddress(raw.address);
+    } catch {
+      // fall through
+    }
+  }
+  return getAddress(fallback);
+}
+
+/** Base Sepolia VaultPeer tokens — prefer live Hardhat deploy artifacts. */
+export const AV_MEZOV_PEER = readPeerAddress("avMEZOvPeer", FALLBACK_AV_MEZOV_PEER);
+export const AV_BTCV_PEER = readPeerAddress("avBTCvPeer", FALLBACK_AV_BTCV_PEER);
 
 /** Canonical MUSD on Base / Ethereum / Mezo mainnet (NTT). Not present on Base Sepolia. */
 export const CANONICAL_MUSD_MAINNET = getAddress("0xdD468A1DDc392dcdbEf6db6e34E89AA338F9F186");
+
+/** User-provided Base Sepolia MUSD (Wave 2 testnet). */
+export const BASE_SEPOLIA_MUSD = getAddress("0x560985f804De8187E8FBA94F7127Bc4c0e54AEA5");
 
 export const TICK_SPACING = 200;
 /** TickMath.getSqrtRatioAtTick(0) — 1:1 demo price. */
@@ -128,11 +154,7 @@ export function writePoolsBook(book: PoolsBook): void {
   writeFileSync(POOLS_PATH, JSON.stringify(book, null, 2) + "\n");
 }
 
-export function isNonZeroAddress(value: string | null | undefined): value is string {
-  return Boolean(value && value !== ZeroAddress && /^0x[0-9a-fA-F]{40}$/.test(value));
-}
-
-/** Prefer env → address book DemoMUSD/MUSD → pools.json. */
+/** Prefer env → address book MUSD/DemoMUSD → pinned Base Sepolia MUSD → pools.json. */
 export function resolveMusdAddress(book?: AddressBook, pools?: PoolsBook): {
   address: string | null;
   kind: PoolsBook["musdKind"];
@@ -142,8 +164,14 @@ export function resolveMusdAddress(book?: AddressBook, pools?: PoolsBook): {
     return { address: getAddress(env), kind: "env" };
   }
   const ab = book ?? readAddressBook();
+  if (isNonZeroAddress(ab.MUSD) && !isNonZeroAddress(ab.DemoMUSD)) {
+    return { address: getAddress(ab.MUSD), kind: "env" };
+  }
   if (isNonZeroAddress(ab.DemoMUSD)) return { address: getAddress(ab.DemoMUSD), kind: "demo" };
   if (isNonZeroAddress(ab.MUSD)) return { address: getAddress(ab.MUSD), kind: "demo" };
+  if (isNonZeroAddress(BASE_SEPOLIA_MUSD)) {
+    return { address: BASE_SEPOLIA_MUSD, kind: "env" };
+  }
   const pb = pools ?? readPoolsBook();
   if (isNonZeroAddress(pb.musd)) return { address: getAddress(pb.musd), kind: pb.musdKind ?? "demo" };
   return { address: null, kind: null };
