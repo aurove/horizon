@@ -1,34 +1,36 @@
 # Horizon — Hackathon Submission
 
-Skeleton for Mezo Buildathon / AKINDO judges. Fill remaining placeholders before final submission.
+Judge packet for the **2026 Mezo Buildathon / AKINDO** (Wave 2). Product overview and developer setup: [`README.md`](./README.md). Contract and NTT technical references: [`contracts/README.md`](./contracts/README.md), [`wormhole/README.md`](./wormhole/README.md).
 
 ## Live URLs
 
 | Surface | URL | Notes |
 | --- | --- | --- |
-| dApp (production) | https://www.aurove.xyz | Public (HTTP 200) — prefer this for judges |
-| dApp (testnet) | https://testnet.aurove.xyz | Public (HTTP 200) |
-| dApp (Vercel deployment hostname) | https://mezo-fractals-eldra-efc19f6f.vercel.app | Was behind Deployment Protection / SSO (`/sso-api`). SSO disabled 2026-11-10 via `vercel project protection disable mezo-fractals --sso` (`ssoProtection: null`); hostname now returns HTTP 200. Still prefer custom domains above. |
-| Local dApp (fallback) | Clone https://github.com/aurove/dapp then `pnpm install && pnpm --filter @aurove/dapp dev` (or `pnpm dev` from that repo root) | Use for local wallet flows or if hosted URLs change |
+| dApp (testnet) | https://testnet.aurove.xyz | **Primary judge URL** — Horizon bridge + Base Sepolia swap |
+| dApp (production) | https://www.aurove.xyz | Public (HTTP 200) |
+| dApp source | https://github.com/aurove/dapp/tree/testnet | Use the **`testnet`** branch |
+| Local dApp (fallback) | Clone the `testnet` branch, then `pnpm install && pnpm --filter @aurove/dapp dev` | Wallet flows against local UI |
 | Demo video | _TBD_ | Link walkthrough once recorded |
-| Pitch / deck | [`docs/pitch/Aurove-Horizon-Wave2.pptx`](./docs/pitch/Aurove-Horizon-Wave2.pptx) | Wave 2 pitch deck (regenerate via `node docs/pitch/generate-horizon-deck.js`) |
+| Pitch / deck | [`docs/pitch/Aurove-Horizon-Wave2.pptx`](./docs/pitch/Aurove-Horizon-Wave2.pptx) | Regenerate via `node docs/pitch/generate-horizon-deck.js` |
 
-> **Judge note:** Prefer `https://www.aurove.xyz` or `https://testnet.aurove.xyz`. The `*.vercel.app` hostname is currently public after SSO was turned off; if it ever redirects to Vercel SSO again, run the public dApp locally from https://github.com/aurove/dapp.
+> **Judge note:** Prefer https://testnet.aurove.xyz for Horizon Wave 2. Production www is the broader Aurove app. If a hosted URL is unavailable, run the dApp locally from the `testnet` branch.
 
 ## Public repos
 
-| Repo | URL | Visibility (checked 2026-11-10) |
+| Repo | URL | Visibility |
 | --- | --- | --- |
-| Horizon (contracts + Wormhole NTT) | https://github.com/aurove/horizon | **public** |
-| dApp | https://github.com/aurove/dapp | **public** (`gh repo edit Aurove/dapp --visibility public` succeeded / already public) |
+| Horizon (contracts + Wormhole NTT + Aero) | https://github.com/aurove/horizon | **public** · MIT |
+| Horizon Contracts submodule | https://github.com/aurove/horizon-contracts | **public** · MIT |
+| Horizon Wormhole submodule | https://github.com/aurove/horizon-wormhole | **public** · MIT |
+| dApp | https://github.com/aurove/dapp/tree/testnet | **public** (`testnet` branch) |
 
 ## Contract addresses (testnet)
 
-Sources: `contracts/deployments/{testnet,baseSepolia}/` and `wormhole/vaults/*/testnet/deployment.json`.
+Sources: `contracts/deployments/{testnet,baseSepolia}/` and `wormhole/vaults/*/testnet/deployment.json`. Deployer / NTT owner: `0x6E1126EA838DA392A55D8DdeD9bADEccA5835114`.
 
 ### Mezo testnet — Horizon vaults
 
-Redeployed 2026-11-10 (dual-ABI Vault + dead-share seed path). Dead shares seeded later from deployer Id20 (`1e12` assets → `0x…dEaD` on both vaults).
+Redeployed 2026-11-10 (dual-ABI Vault + dead-share seed path). Dead shares seeded from deployer Id20 (`1e12` assets → `0x…dEaD` on both vaults).
 
 | Contract | Address | Explorer |
 | --- | --- | --- |
@@ -36,14 +38,14 @@ Redeployed 2026-11-10 (dual-ABI Vault + dead-share seed path). Dead shares seede
 | avBTC Vault (`avBTCv`) | `0x8e95C83A5144dcdD6ce79D7fBd58057b689f086f` | [Sourcify verified](https://repo.sourcify.dev/31611/0x8e95C83A5144dcdD6ce79D7fBd58057b689f086f) · [explorer](https://explorer.test.mezo.org/address/0x8e95C83A5144dcdD6ce79D7fBd58057b689f086f) |
 | avMEZO Vault (`avMEZOv`) | `0x2C45a18a23d5bfFf3Fc0c4Bff6376dA1d943373c` | [Sourcify verified](https://repo.sourcify.dev/31611/0x2C45a18a23d5bfFf3Fc0c4Bff6376dA1d943373c) · [explorer](https://explorer.test.mezo.org/address/0x2C45a18a23d5bfFf3Fc0c4Bff6376dA1d943373c) |
 
-Factory-created vaults are verified on Sourcify. Mezo Blockscout still reports “not a smart-contract” for those CREATE addresses even though RPC bytecode and Sourcify matches are live.
+Factory-created vaults are verified on Sourcify. Mezo Blockscout may still report “not a smart-contract” for those CREATE addresses even when RPC bytecode and Sourcify matches are live.
 
 Underlying Id20 assets (from vault `linkedData`):
 
 | Asset | Address |
 | --- | --- |
-| avBTC Id20 | `0xf2aeB53d71CD541EFeaA37788F0841D7d21612F9` |
-| avMEZO Id20 | `0x0aeDdEaB271Bc032d6758c34Dc8356632D6F812e` |
+| avBTC Id20 (`avBTCm`) | `0xf2aeB53d71CD541EFeaA37788F0841D7d21612F9` |
+| avMEZO Id20 (`avMEZOm`) | `0x0aeDdEaB271Bc032d6758c34Dc8356632D6F812e` |
 
 ### Base Sepolia — VaultPeer tokens + MUSD + Aero
 
@@ -65,7 +67,7 @@ Underlying Id20 assets (from vault `linkedData`):
 
 | Chain | Role | Address |
 | --- | --- | --- |
-| Mezo | NTT manager (locking) | `0x01B2C64505f367203429753029EA8BEB66987a09` |
+| Mezo | NTT manager (locking) | [`0x01B2C64505f367203429753029EA8BEB66987a09`](https://explorer.test.mezo.org/address/0x01B2C64505f367203429753029EA8BEB66987a09#code) |
 | Mezo | Wormhole transceiver | `0xA21328Abc178E1b47eC9A14f40e7100372678d10` |
 | Mezo | Token (vault) | `0x8e95C83A5144dcdD6ce79D7fBd58057b689f086f` |
 | BaseSepolia | NTT manager (burning) | `0x96e12AD5F0402a458823A8E2A6Ea0E986DCD358e` |
@@ -76,14 +78,14 @@ Underlying Id20 assets (from vault `linkedData`):
 
 | Chain | Role | Address |
 | --- | --- | --- |
-| Mezo | NTT manager (locking) | `0x2a0B2726f7822cEBdE9D665D049a42f13Fa6A517` |
+| Mezo | NTT manager (locking) | [`0x2a0B2726f7822cEBdE9D665D049a42f13Fa6A517`](https://explorer.test.mezo.org/address/0x2a0B2726f7822cEBdE9D665D049a42f13Fa6A517#code) |
 | Mezo | Wormhole transceiver | `0x6201F4c88aAfDd627108467dafA81464E3eb885a` |
 | Mezo | Token (vault) | `0x2C45a18a23d5bfFf3Fc0c4Bff6376dA1d943373c` |
 | BaseSepolia | NTT manager (burning) | `0x79D11c9d7F5d5ef676c4c87Cf9deEC5D972bd8A1` |
 | BaseSepolia | Wormhole transceiver | `0x9383b1ACAf2bD2B0F6b205Be9fFbCcBfC78A8300` |
 | BaseSepolia | Token (peer) | `0x172096f3F0F98B9dc1302695A48044D6A3D799C9` |
 
-Deployer / NTT owner (testnet): `0x6E1126EA838DA392A55D8DdeD9bADEccA5835114`. VaultPeer minters sealed to spoke NTT managers; peer ownership renounced.
+VaultPeer minters are sealed to spoke NTT managers; peer ownership is renounced. Full NTT verify commands: [`wormhole/README.md`](./wormhole/README.md).
 
 ## Demo transactions
 
@@ -91,11 +93,11 @@ Live Base Sepolia walkthroughs (2026-11-15). Receipts also under `reports/wave2-
 
 | Flow | Explorer link | Notes |
 | --- | --- | --- |
-| Deposit into vault (Mezo) | Prior Id20→vault deposits for bridged inventory | Wave 2 ops; not re-run in this E2E (`E2E_SKIP_BRIDGE`) |
-| Harvest / compound | _TBD_ | Out of scope for Wave 2 Aero path |
+| Deposit into vault (Mezo) | Prior Id20→vault deposits for bridged inventory | Wave 2 ops; E2E often uses `E2E_SKIP_BRIDGE` with existing peer balance |
+| Harvest / compound | _TBD_ | Out of scope for Wave 2 Aero demo path |
 | Bridge Mezo → Base Sepolia (avMEZOv) | [Mezo tx `0xfbe5048c…075b4d`](https://wormholescan.io/#/tx/0xfbe5048c479ddba224b7f36af377d7b8cdaa9106a7293d4428e4539615075b4d?network=Testnet) | 10 avMEZOv landed on peer `0x1720…C9` |
 | Bridge Mezo → Base Sepolia (avBTCv) | [Mezo tx `0xfd4c6ee6…a0e038`](https://wormholescan.io/#/tx/0xfd4c6ee6ba106bcd131d1c0f6e8ce0b6b52ed4fc02ab5696193f61c06ea0e038?network=Testnet) | 0.002 avBTCv landed on peer `0x0d36…E0` |
-| Bridge Base Sepolia → Mezo (return) | _TBD_ | Optional; not required for Aero LP demo |
+| Bridge Base Sepolia → Mezo (return) | _TBD_ | Optional; NTT + dApp Deposit support the path; linked tx not required for Aero LP demo |
 | Seed CL200 LP (avMEZOv–MUSD) | [Base `0x69515bf4…83a6f1`](https://sepolia.basescan.org/tx/0x69515bf4e74ed62aa4b5b370f4641e2c7ef4f076f8f8952dcd42e33f7a83a6f1) | `pnpm seed:horizon-lp:broadcast` (0.001 / 0.001) |
 | Seed CL200 LP (avBTCv–MUSD) | [Base `0xc395cff7…e99bf5`](https://sepolia.basescan.org/tx/0xc395cff77a6c361faf41411de5fa68e8ae21f4a0d61a04bb0ea82d9743e99bf5) | Same seed run |
 | E2E swap + LP (avMEZOv) | Swap [`0xf91b8a9c…de4aaf`](https://sepolia.basescan.org/tx/0xf91b8a9ceddc0cbfc2280db52058252aae1f68f4ff08220f648c94d308de4aaf) · LP [`0x9d90b16f…cb4c88`](https://sepolia.basescan.org/tx/0x9d90b16fa655efa4a4b9f3ad2c1204af212926fd1d850ddab389d2376ccb4c88) | `E2E_SKIP_BRIDGE=YES` amount `0.01`; receipt `reports/wave2-e2e-1794723409190.json` |
@@ -103,9 +105,23 @@ Live Base Sepolia walkthroughs (2026-11-15). Receipts also under `reports/wave2-
 
 **Note:** Mezo testnet Portal MUSD NTT (transceiver `0x0E628…`) stopped producing guardian VAAs after sequence 88. Large (~7555) and tiny (1) Mezo→Base MUSD transfers remain unclaimable via Wormholescan; Base Sepolia MUSD inventory for this demo came from an alternate path once the deployer balance was non-zero. Vault-share NTT (avMEZOv / avBTCv) VAAs continue to work.
 
+## Suggested judge walkthrough
+
+1. Open https://testnet.aurove.xyz — connect a wallet on **Mezo Testnet** or **Base Sepolia**.
+2. **Bridge:** withdraw/deposit Horizon vault shares Mezo ↔ Base (NTT). Prefer Max amounts (UI floors to Wormhole’s 8-decimal precision).
+3. **Swap (Base):** `/swap` with avMEZOv / avBTCv / MUSD on Aero Slipstream routes.
+4. Optional local verify (no private key):
+
+```bash
+git clone --recurse-submodules https://github.com/aurove/horizon.git
+cd horizon && pnpm install
+pnpm test
+pnpm verify:cross-chain:testnet   # RPCs defaulted; BASESCAN_API_KEY optional
+```
+
 ## Team
 
-Real names/roles/contacts unknown at submission time — do not invent biographies. Use placeholders below until contributors confirm.
+Replace placeholders with confirmed names / roles / contacts before final form submit. Do not invent biographies.
 
 | Name | Role | Contact |
 | --- | --- | --- |
@@ -148,7 +164,7 @@ Addresses above are also readable from:
 - `wormhole/vaults/avBTCv/testnet/deployment.json`
 - `wormhole/vaults/avMEZOv/testnet/deployment.json`
 
-### dApp (`aurove/dapp`)
+### dApp (`aurove/dapp`, `testnet` branch)
 
 Public client vars only (from that repo’s `.env.example`). Never commit service-role keys or webhook secrets.
 
@@ -163,13 +179,31 @@ Server-only secrets (`SUPABASE_SERVICE_ROLE_KEY`, `DATABASE_URL`, `CRON_INTERNAL
 
 ## Publish checklist
 
-- [x] Attempt `gh repo edit Aurove/dapp --visibility public` (and/or API PATCH) — **succeeded**; repo is public
+### Repos & license
+
 - [x] Horizon repo public
+- [x] dApp repo public
 - [x] MIT `LICENSE` at horizon root
-- [x] README license section updated
 - [x] `"license": "MIT"` on root / contracts / wormhole `package.json`
-- [x] Live URL guidance: prefer public custom domains; document former SSO on `*.vercel.app` + disable attempt; document local dApp run path
-- [x] Demo tx hashes / explorer links filled in (seed + live E2E swap/LP 2026-11-15)
-- [ ] Team table: replace placeholders with confirmed names / roles / contacts
-- [ ] Demo video linked
+- [x] Root README license section points at `LICENSE`
+
+### Docs
+
+- [x] Root [`README.md`](./README.md) reflects Wave 2 live status (not “intended only”)
+- [x] [`contracts/README.md`](./contracts/README.md) — setup, tests, deploy, addresses, verification
+- [x] [`wormhole/README.md`](./wormhole/README.md) + [`wormhole/docs/ntt-design.md`](./wormhole/docs/ntt-design.md)
+- [x] Live URL guidance: prefer `testnet.aurove.xyz` / `www.aurove.xyz`; dApp source on **`testnet`** branch
 - [x] Pitch deck at `docs/pitch/Aurove-Horizon-Wave2.pptx`
+
+### Demos
+
+- [x] Demo tx hashes / explorer links filled in (Mezo→Base bridge + seed + live E2E swap/LP 2026-11-15)
+- [ ] Demo video linked
+- [ ] Team table: replace placeholders with confirmed names / roles / contacts
+- [ ] Optional: Base Sepolia → Mezo return demo tx linked
+- [ ] Optional: harvest / compound demo tx linked
+
+### Out of scope for Wave 2 submission
+
+- Mainnet Mezo / Base Horizon endpoints
+- Portal MUSD NTT guardian recovery on Mezo testnet (use pinned Base Sepolia MUSD instead)

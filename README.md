@@ -10,7 +10,17 @@ Aurove transforms locked BTC and MEZO positions into **1:1 liquid ERC-1155 repre
 
 Starting with Mezo and Base, Horizon enables these assets to participate in MUSD liquidity pools on Aero while their underlying positions remain in Mezo Earn, continuing to generate rewards and yield.
 
-> **Status:** Under development for the 2026 Mezo Buildathon on AKINDO. The architecture and roadmap below describe the intended implementation.
+> **Status (Wave 2 — Mezo Buildathon / AKINDO):** Testnet is live. Mezo vaults, Base Sepolia peers, Wormhole NTT, Aero CL200 pools, and the dApp bridge/swap UI are deployed and demonstrated. See [`SUBMISSION.md`](./SUBMISSION.md) for addresses, demo txs, and the judge checklist. Mainnet endpoints are not deployed yet.
+
+| Surface | Link |
+|---------|------|
+| Judge packet | [`SUBMISSION.md`](./SUBMISSION.md) |
+| dApp (testnet) | https://testnet.aurove.xyz |
+| dApp source | https://github.com/aurove/dapp/tree/testnet |
+| Contracts technical docs | [`contracts/README.md`](./contracts/README.md) |
+| Wormhole NTT technical docs | [`wormhole/README.md`](./wormhole/README.md) · [`wormhole/docs/ntt-design.md`](./wormhole/docs/ntt-design.md) |
+| Aero / Slipstream | [`aero/README.md`](./aero/README.md) |
+| Pitch deck | [`docs/pitch/Aurove-Horizon-Wave2.pptx`](./docs/pitch/Aurove-Horizon-Wave2.pptx) |
 
 ## The Problem
 
@@ -86,33 +96,33 @@ Depositors receive transferable vault shares representing a proportional claim o
 
 Unlike Aurove's fixed 1:1 ERC-1155-to-Id20 wrapping, ERC-4626 vault shares use an exchange rate determined by the vault's assets and share supply. As yield compounds, each share can represent an increasing quantity of Id20.
 
-The initial design focuses on existing managed Aurove positions, with support for additional position classes planned.
+Wave 2 managed vaults: **avBTCv** over Id20 **avBTCm**, and **avMEZOv** over Id20 **avMEZOm**, deployed on Mezo testnet via `VaultFactory`.
 
 ### 4. Bridge to Base
 
-Vault shares are designed to move between Mezo and Base using Wormhole NTT infrastructure once deployment and configuration are complete.
+Vault shares move between Mezo and Base using Wormhole NTT (locking on Mezo, burning/minting `VaultPeer` on Base Sepolia for testnet).
 
-The intended cross-chain design maintains a backed representation of the originating vault shares while the underlying locked positions remain on Mezo.
+The hub-and-spoke design keeps a backed representation of the originating vault shares while the underlying locked positions remain on Mezo. Live Mezo → Base Sepolia transfers for avMEZOv and avBTCv are documented in [`SUBMISSION.md`](./SUBMISSION.md).
 
 ### 5. Access Aero liquidity
 
-On Base, bridged Horizon vault shares are intended to be paired with MUSD in Aero liquidity pools.
+On Base Sepolia, bridged Horizon vault shares are paired with MUSD in Aero Slipstream CL200 pools (`avMEZOv`–MUSD and `avBTCv`–MUSD).
 
-Canonical **mainnet** MUSD (Mezo / Ethereum / Base via Wormhole NTT): `0xdD468A1DDc392dcdbEf6db6e34E89AA338F9F186`. That contract is **not** deployed on Base Sepolia; Sepolia demos use `DemoMUSD` from `@aurove/horizon-aero` (`pnpm deploy:demo-musd`). See [`aero/README.md`](./aero/README.md) for CL200 pool create/seed scripts.
+Canonical **mainnet** MUSD (Mezo / Ethereum / Base via Wormhole NTT): `0xdD468A1DDc392dcdbEf6db6e34E89AA338F9F186`. That contract is **not** on Base Sepolia. Wave 2 demos use the pinned Base Sepolia MUSD `0x560985f804De8187E8FBA94F7127Bc4c0e54AEA5` (see `aero/deployments/baseSepolia/addresses.json`). `DemoMUSD` remains available for local scaffolding via `pnpm deploy:demo-musd`. Pool create/seed: [`aero/README.md`](./aero/README.md).
 
-Users will be able to trade these representations or provide liquidity without requiring the original veNFT positions to leave Mezo.
+Users can trade these representations or provide liquidity without requiring the original veNFT positions to leave Mezo. The testnet dApp exposes Base Sepolia Horizon swaps at https://testnet.aurove.xyz/swap.
 
 ### 6. Return to Mezo
 
-The process is designed to work in reverse.
-
-The intended return path lets users withdraw liquidity, bridge vault shares back to Mezo, redeem ERC-4626 shares for underlying Id20 tokens, and continue through Aurove's existing redemption lifecycle.
+The return path withdraws liquidity, bridges vault shares back to Mezo (NTT burn on Base → unlock on Mezo), redeems ERC-4626 shares for underlying Id20, and continues through Aurove's existing redemption lifecycle.
 
 **Mezo Earn rewards and yields are claimable only on Mezo, through the applicable withdrawal or redemption process.** Bridging vault shares to Base does not transfer the underlying reward-claiming mechanism to Base.
 
-Horizon vaults can capture yield through Aurove's on-Mezo compounding mechanism, but users cannot directly claim their underlying Mezo Earn rewards on the destination chain.
+Horizon vaults capture yield through Aurove's on-Mezo compounding mechanism, but users cannot directly claim their underlying Mezo Earn rewards on the destination chain.
 
 Redemption of vault shares does not bypass the original veNFT's lock or withdrawal restrictions.
+
+> **Wave 2 note:** Mezo → Base Sepolia vault-share NTT is demonstrated on-chain. Base → Mezo return is supported by the same NTT deployment and dApp Deposit flow; a linked return demo tx remains optional in the submission packet.
 
 ## Architecture
 
@@ -133,7 +143,7 @@ ERC-4626 provides a standardized interface for tokenized vaults, including depos
 
 Horizon uses this standard to expose existing Aurove assets to a broader range of ERC-20-based protocols.
 
-Each vault is intended to correspond to a defined, fungible underlying position class, preventing different lock terms or economic entitlements from being combined without an explicit accounting model.
+Each vault corresponds to a defined, fungible underlying position class, preventing different lock terms or economic entitlements from being combined without an explicit accounting model.
 
 ### Reward Accounting and Compounding
 
@@ -159,13 +169,15 @@ As a result:
 
 This architecture separates yield generation from cross-chain liquidity while preserving the underlying reward-accounting rules.
 
+> **Testnet ABI note:** Mezo testnet Id20 gauges still expose legacy `accountMetadata` (not `accountState`). Horizon `Vault.claimableRewards` prefers `accountState` and falls back to `accountMetadata.earned` so compounding views work on both ABIs. See [`contracts/README.md`](./contracts/README.md).
+
 ### Cross-Chain Design
 
-Horizon is designed around a canonical vault-share supply on Mezo with representations on supported destination chains.
+Horizon uses a canonical vault-share supply on Mezo with burning/minting peer representations on supported destination chains (Wormhole NTT locking ↔ burning).
 
-The bridge implementation must preserve supply conservation, enforce authorized cross-chain messaging, and support a complete return path to the originating ERC-4626 vault.
+The bridge implementation preserves supply conservation, enforces authorized cross-chain messaging, and supports a return path to the originating ERC-4626 vault.
 
-Horizon does not bridge the underlying veNFTs or transfer Mezo Earn custody to external chains.
+Horizon does not bridge the underlying veNFTs or transfer Mezo Earn custody to external chains. Design detail: [`wormhole/docs/ntt-design.md`](./wormhole/docs/ntt-design.md).
 
 ## Repository Structure
 
@@ -173,10 +185,16 @@ Horizon uses a workspace repository with independently maintained Git submodules
 
 ```text
 horizon/
-├── contracts/          # Horizon smart contracts
-├── wormhole/           # Wormhole integration
+├── contracts/          # @aurove/horizon-contracts — Vault, VaultFactory, VaultPeer
+├── wormhole/           # @aurove/horizon-wormhole — NTT configs + CLI helpers
+├── aero/               # @aurove/horizon-aero — Base Sepolia Slipstream / CL200
+├── scripts/            # Cross-chain deploy, verify, bridge round-trip, Wave 2 E2E
+├── docs/               # Pitch deck, destination-executor notes
+├── reports/            # Round-trip / E2E JSON receipts
+├── SUBMISSION.md       # Judge address book, demo txs, publish checklist
 ├── package.json        # Root workspace package
-├── .gitmodules         # Submodule configuration
+├── .gitmodules
+├── LICENSE             # MIT
 └── README.md
 ```
 
@@ -185,81 +203,104 @@ horizon/
 - [Horizon Workspace](https://github.com/aurove/horizon)
 - [Horizon Contracts](https://github.com/aurove/horizon-contracts)
 - [Horizon Wormhole](https://github.com/aurove/horizon-wormhole)
+- [dApp (`testnet` branch)](https://github.com/aurove/dapp/tree/testnet)
 
 ## Development
 
 ### Prerequisites
 
 - Git
-- Node.js and a compatible package manager
-- An EVM development environment, as configured by the contract implementation
-- RPC access and funded development accounts for the networks being tested
+- Node.js 20+ and [pnpm](https://pnpm.io)
+- [Foundry](https://book.getfoundry.sh/getting-started/installation) (`forge`, `cast`)
+- [Bun v1.2.23](https://bun.sh) on `PATH` (Wormhole NTT CLI installer)
+- RPC access and funded accounts for networks you deploy to
 
 ### Clone the repository
 
 ```bash
 git clone --recurse-submodules https://github.com/aurove/horizon.git
 cd horizon
+pnpm install
 ```
 
 For an existing checkout:
 
 ```bash
 git submodule update --init --recursive
+pnpm install
 ```
 
-### Working with submodules
-
-To fetch the latest commits from the configured submodule branches:
+### Build and test
 
 ```bash
-git submodule update --remote
+pnpm build          # contracts (forge + Hardhat)
+pnpm test           # contracts Forge suite
+pnpm typecheck      # contracts + wormhole + aero
 ```
 
-The workspace provides root scripts for building and testing the contracts and initializing the Wormhole NTT configuration. See [`wormhole/README.md`](./wormhole/README.md) for NTT CLI setup and deployment steps.
+Package-level detail:
 
-The end-to-end deployment entry points are `pnpm deploy:cross-chain:testnet` and `pnpm deploy:cross-chain:mainnet`. They deploy the Mezo vaults and Base peers, deploy/configure NTT, set per-token rate limits, and seal each spoke peer to its NTT Manager. See [`wormhole/README.md`](./wormhole/README.md) for required environment variables and safeguards.
+- Contracts setup / deploy / verify: [`contracts/README.md`](./contracts/README.md)
+- NTT CLI install / deploy / verify: [`wormhole/README.md`](./wormhole/README.md)
+- Aero pools: [`aero/README.md`](./aero/README.md)
 
-The deployment and redeployment workflows verify contracts on Mezo and Base/Base Sepolia, and use the NTT CLI's built-in Foundry verification for new NTT deployments and configuration updates. Set `BASESCAN_API_KEY` in `.env` for BaseScan verification. Run standalone verification against an existing deployment with `pnpm verify:cross-chain:testnet` or `pnpm verify:cross-chain:mainnet`; each package also has its own per-network verifier.
+### Environment
 
-For a fresh deployment across both submodules, set `CONFIRM_HORIZON_DEPLOYMENT=YES` and `CONFIRM_HORIZON_REDEPLOYMENT=YES`, then run `pnpm redeploy:cross-chain:testnet` (or `pnpm redeploy:cross-chain:mainnet`, which also requires `CONFIRM_HORIZON_MAINNET_DEPLOYMENT=YES`). This invokes each submodule's reset workflow, creates fresh contracts and NTT managers, then reconnects peers, applies limits, and seals the new VaultPeers. Hardhat deployment records and Wormhole NTT config files are replaced; previous contracts remain on-chain at their old addresses. See the package READMEs for standalone submodule commands.
+```bash
+cp .env.example .env
+```
+
+Judges running read-only commands need only public RPCs (defaults are fine). Deploy and live bridge/E2E flows need keys and confirmation flags — see `.env.example` and [`SUBMISSION.md`](./SUBMISSION.md). Never commit private keys.
+
+### Cross-chain deploy (testnet)
+
+```bash
+export ETH_PRIVATE_KEY=0x...
+export HORIZON_AVBTCV_NTT_LIMIT=100
+export HORIZON_AVMEZOV_NTT_LIMIT=100
+export CONFIRM_HORIZON_DEPLOYMENT=YES
+pnpm deploy:cross-chain:testnet
+```
+
+This deploys Mezo vaults and Base peers, deploys/configures NTT, sets rate limits, and seals each spoke peer to its NTT manager. Verification runs by default (`BASESCAN_API_KEY` for Basescan). Standalone: `pnpm verify:cross-chain:testnet`.
+
+Fresh local records + new on-chain deployments (old addresses remain live):
+
+```bash
+CONFIRM_HORIZON_DEPLOYMENT=YES CONFIRM_HORIZON_REDEPLOYMENT=YES \
+  pnpm redeploy:cross-chain:testnet
+```
 
 ### Testnet bridge round trip
-
-After the Mezo vaults, Base Sepolia peers, and NTT routes have been deployed and configured, run a small real transfer in both directions:
 
 ```bash
 CONFIRM_HORIZON_TESTNET_ROUNDTRIP=YES pnpm bridge:roundtrip:testnet -- avBTCv 0.0001
 ```
 
-Use `avBTCv` or `avMEZOv` and pass the amount explicitly. Set `HORIZON_ROUNDTRIP_PRIVATE_KEY` in the root `.env`; this dedicated signer must hold that many Mezo vault shares and have native gas on both Mezo testnet and Base Sepolia. The script passes this key to the NTT CLI as `ETH_PRIVATE_KEY`, so it is independent of the deployment signer. The amount must be within every configured NTT rate limit and use at most eight decimal places. The script checks chain IDs, deployment/config address consistency, the sealed Base peer minter, and starting balances before transferring. It waits until the destination balance changes before sending the return leg, then confirms both token balances return to their starting values. Set `HORIZON_ROUNDTRIP_TIMEOUT_SECONDS` to adjust the default one-hour timeout. A JSON receipt is saved under `reports/` when both legs pass. These are real testnet transfers; if a leg times out, inspect both on-chain balances before retrying.
+Use `avBTCv` or `avMEZOv`. Set `HORIZON_ROUNDTRIP_PRIVATE_KEY` in `.env`. Amounts must fit NTT limits and use at most **eight decimal places** (Wormhole wire precision). Receipts land under `reports/`.
 
 ### Wave 2 E2E (bridge → Aero swap/LP)
 
-Scripted path from Mezo vault shares to Base Sepolia Aero Slipstream swap + LP:
-
 ```bash
-# Dry-run (default): validate NTT + aero address books, print plan, write receipt
+# Dry-run (default)
 pnpm e2e:horizon-aero:testnet -- avMEZOv 0.01
 
-# Live (requires seeded CL200 pools on Base Sepolia)
+# Live
 CONFIRM_HORIZON_E2E=YES pnpm e2e:horizon-aero:testnet -- avMEZOv 0.01
 ```
 
-Set `HORIZON_E2E_PRIVATE_KEY` for live runs. Optional: `E2E_DEPOSIT_ASSETS` (Id20→vault before bridge), `E2E_SWAP_BPS` (default `5000`), `E2E_SKIP_BRIDGE=YES` (use existing peer balance). Receipts land at `reports/wave2-e2e-<timestamp>.json`. Dry-run succeeds even when Slipstream is not yet broadcast.
-
-**Bootstrap order:** empty pools cannot support the E2E peer→MUSD swap. After peers and Base Sepolia MUSD (`0x5609…`) are in the wallet, run `pnpm seed:horizon-lp:broadcast` first, then the live E2E.
+Set `HORIZON_E2E_PRIVATE_KEY` for live runs. Optional: `E2E_DEPOSIT_ASSETS`, `E2E_SWAP_BPS`, `E2E_SKIP_BRIDGE=YES`. Seed pools first with `pnpm seed:horizon-lp:broadcast` when needed.
 
 ## Buildathon Roadmap
 
-Horizon is being developed during the **2026 Mezo Buildathon on AKINDO**.
+Horizon is developed for the **2026 Mezo Buildathon on AKINDO**.
 
 ### Phase 1 — Vault Infrastructure
 
 - [x] Implement ERC-4626 vaults for eligible Aurove Id20 assets.
 - [x] Define a one-vault-per-Id20 creation registry in `VaultFactory`.
 - [x] Implement deposit, mint, withdraw, and redeem flows for vault shares.
-- [x] Integrate Aurove Id20 reward claiming and gauge compounding.
+- [x] Integrate Aurove Id20 reward claiming and gauge compounding (dual-ABI claimable views for testnet).
 - [x] Add vault accounting, conversion, withdrawal, and invariant test coverage.
 
 ### Phase 2 — Cross-Chain Integration
@@ -268,20 +309,21 @@ Horizon is being developed during the **2026 Mezo Buildathon on AKINDO**.
 - [x] Implement the Base `VaultPeer` representation with an NTT-manager-only mint/burn boundary and one-time minter sealing.
 - [x] Add a modular Horizon deployment script for Mezo vaults, Base peers, NTT managers, peer configuration, limits, and minter handoff.
 - [x] Deploy and configure the testnet Mezo and Base Sepolia vault-share pairs and NTT managers.
+- [x] Implement cross-chain transfer and settlement flows (NTT + dApp bridge; Mezo → Base Sepolia demo txs).
+- [x] Provide round-trip tooling (`pnpm bridge:roundtrip:testnet`) and Mezo → Base live demos.
 - [ ] Deploy and configure mainnet Mezo and Base endpoints.
-- [ ] Implement cross-chain transfer and settlement flows.
-- [ ] Run Mezo → Base → Mezo round-trip tests and verify backing and supply conservation.
-- [ ] Test return transfers and vault redemption.
+- [ ] Publish a linked Base Sepolia → Mezo return demo tx (optional for Wave 2 Aero path).
+- [ ] Expand automated return-leg + vault redemption regression coverage.
 
 ### Phase 3 — External Liquidity
 
 - [x] Scaffold minimal Aero Slipstream stack for Base Sepolia (`@aurove/horizon-aero`).
-- [x] Add DemoMUSD + scripts to create/seed CL200 `avMEZOv`/`avBTCv` ↔ MUSD pools (broadcast gated).
-- [x] Add Wave 2 E2E script (Mezo deposit?/NTT → Base Aero swap + LP) with dry-run receipts.
-- [ ] Broadcast Slipstream + pools on Base Sepolia and verify swaps.
-- [ ] Implement liquidity provisioning and removal flows.
-- [ ] Build the end-to-end user experience.
-- [ ] Demonstrate the complete Mezo → Base → Mezo lifecycle.
+- [x] Create/seed CL200 `avMEZOv`/`avBTCv` ↔ MUSD pools on Base Sepolia (broadcast + demo txs).
+- [x] Add Wave 2 E2E script (Mezo deposit?/NTT → Base Aero swap + LP) with receipts.
+- [x] Verify swaps/LP on Base Sepolia (live E2E explorer links in `SUBMISSION.md`).
+- [x] Ship testnet dApp bridge + Base Horizon swap UX ([`testnet.aurove.xyz`](https://testnet.aurove.xyz)).
+- [ ] Demonstrate a complete documented Mezo → Base → Mezo user lifecycle end-to-end.
+- [ ] Mainnet Aero liquidity for Horizon vault shares.
 
 ### Phase 4 — Yield Optimization
 
@@ -290,7 +332,7 @@ Horizon is being developed during the **2026 Mezo Buildathon on AKINDO**.
 - [ ] Extend support to additional Aurove position classes.
 - [ ] Improve cross-chain liquidity management and integrations.
 
-Checked items describe implementation and test coverage in the repository. Mainnet deployment and bridge round-trip verification remain outstanding.
+Checked items describe Wave 2 testnet implementation and demos. Mainnet deployment remains out of scope for this submission.
 
 ## Security Considerations
 
@@ -306,7 +348,7 @@ Important considerations include:
 - **Underlying lock restrictions:** Liquid representations do not remove the original veNFT lock conditions.
 - **External dependencies:** Horizon depends on the correct operation of Aurove, Mezo Earn, Wormhole, Aero, and the tokens involved.
 
-**Horizon is experimental software under development. It should not be treated as audited or production-ready unless an explicit security assessment and deployment announcement are published.**
+**Horizon is experimental software under active development for a hackathon submission. It should not be treated as audited or production-ready unless an explicit security assessment and deployment announcement are published.**
 
 ## The Bigger Picture
 
@@ -328,11 +370,12 @@ The long-term vision is a network of interoperable vault assets that allow locke
 
 - [Aurove on GitHub](https://github.com/aurove)
 - [Horizon Repository](https://github.com/aurove/horizon)
+- [dApp (`testnet`)](https://github.com/aurove/dapp/tree/testnet)
 - [Mezo](https://mezo.org/)
 - [ERC-4626 Standard](https://eips.ethereum.org/EIPS/eip-4626)
 - [Wormhole Documentation](https://wormhole.com/docs/)
-- [Aero](https://aerodrome.finance/)
+- [Aero](https://aero.finance/)
 
 ### License
 
-A license has not yet been declared in this repository. License terms and applicable third-party notices should be added before distribution or reuse.
+This repository is licensed under the [MIT License](./LICENSE).
