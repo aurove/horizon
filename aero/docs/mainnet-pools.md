@@ -6,10 +6,10 @@ Operator runbook for **avMEZOv / MUSD** and **avBTCv / MUSD** Slipstream pools o
 
 | Network | MUSD |
 |---|---|
-| **Base Sepolia** | `DemoMUSD` (deployed via `pnpm deploy:demo-musd:broadcast`) |
+| **Base Sepolia** | Pinned Wave 2 token `0x560985f804De8187E8FBA94F7127Bc4c0e54AEA5` (see `deployments/baseSepolia/addresses.json`). Optional `DemoMUSD` via `pnpm deploy:demo-musd:broadcast` for mintable local scaffolding only. |
 | **Base mainnet** | Canonical MUSD `0xdD468A1DDc392dcdbEf6db6e34E89AA338F9F186` (Wormhole NTT) |
 
-Do **not** point mainnet pools at DemoMUSD. Canonical MUSD has no code on Base Sepolia.
+Do **not** point mainnet pools at DemoMUSD or at the Base Sepolia pinned token. Canonical MUSD has no code on Base Sepolia.
 
 ## Aurove ops Slipstream addresses (Base mainnet)
 
@@ -46,7 +46,7 @@ Unsorted keys revert or resolve the wrong pool.
 3. `CLFactory.createPool(tokenA, tokenB, 200, sqrtPriceX96)` with a deliberate init price (demo scripts use tick-0 / 1:1 `79228162514264337593543950336`; production should match expected share/MUSD spot).
 4. Seed LP via official NPM `mint` (`sqrtPriceX96 = 0` once the pool is initialized). Align `tickLower` / `tickUpper` to multiples of `200`.
 
-Sepolia helpers (`create-horizon-pools`, `seed-horizon-lp`) target the **minimal** Sepolia Slipstream + DemoMUSD stack. On mainnet, call the ops factory/router above (or mirror those scripts with mainnet addresses + canonical MUSD).
+Sepolia helpers (`create-horizon-pools`, `seed-horizon-lp`) target the **minimal** Sepolia Slipstream stack with the pinned Base Sepolia MUSD (or optional DemoMUSD). On mainnet, call the ops factory/router above (or mirror those scripts with mainnet addresses + canonical MUSD).
 
 ## Gauge listing (follow-on)
 

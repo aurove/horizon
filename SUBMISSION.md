@@ -123,8 +123,11 @@ Live Base Sepolia walkthroughs (2026-11-15). Receipts also under `reports/wave2-
 ```bash
 git clone --recurse-submodules https://github.com/aurove/horizon.git
 cd horizon && pnpm install
+pnpm --filter @aurove/horizon-wormhole ntt:install   # pinned NTT CLI + ~/.ntt-cli/.checkout
 pnpm test
-pnpm verify:cross-chain:testnet   # RPCs defaulted; BASESCAN_API_KEY optional
+# Needs MEZO_TESTNET_RPC_URL / BASE_SEPOLIA_RPC_URL (defaults in .env.example)
+# and BASESCAN_API_KEY or ETHERSCAN_API_KEY for Base Sepolia NTT verify
+pnpm verify:cross-chain:testnet
 ```
 
 ## Team
@@ -147,7 +150,7 @@ Copy [`.env.example`](./.env.example) → `.env`. For read-only / verify workflo
 | --- | --- | --- |
 | `MEZO_TESTNET_RPC_URL` | Yes (defaults in example) | Mezo testnet RPC (`https://rpc.test.mezo.org`) |
 | `BASE_SEPOLIA_RPC_URL` | Yes (defaults in example) | Base Sepolia RPC (`https://sepolia.base.org`) |
-| `BASESCAN_API_KEY` | Optional | Basescan verification only |
+| `BASESCAN_API_KEY` (or `ETHERSCAN_API_KEY`) | Required for `pnpm verify:cross-chain:testnet` | Basescan / Etherscan API V2 for Base Sepolia NTT (+ optional Aero) verify |
 | `ETH_PRIVATE_KEY` | **No** — do not share | Deploy / configure signer |
 | `HORIZON_ROUNDTRIP_PRIVATE_KEY` | **No** — do not share | Live bridge round-trip signer |
 | `HORIZON_AVBTCV_NTT_LIMIT` / `HORIZON_AVMEZOV_NTT_LIMIT` | Deploy only | NTT rate limits |
@@ -157,8 +160,9 @@ Useful judge commands (no signing):
 
 ```bash
 pnpm install
+pnpm --filter @aurove/horizon-wormhole ntt:install
 pnpm test
-pnpm verify:cross-chain:testnet   # needs RPC URLs; optional BASESCAN_API_KEY
+pnpm verify:cross-chain:testnet   # needs RPC URLs + BASESCAN_API_KEY (or ETHERSCAN_API_KEY)
 ```
 
 Addresses above are also readable from:

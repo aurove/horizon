@@ -34,10 +34,11 @@ aero/
 │   ├── deploy-demo-musd.ts
 │   ├── create-horizon-pools.ts
 │   ├── seed-horizon-lp.ts
-│   └── lib/horizon-pools.ts
+│   ├── lib/horizon-pools.ts
+│   └── verify-slipstream-base-sepolia.ts
 ├── abis/minimal.ts
 └── deployments/baseSepolia/
-    ├── addresses.json          # Slipstream + DemoMUSD address book
+    ├── addresses.json          # Slipstream + pinned Base Sepolia MUSD (+ optional DemoMUSD)
     └── pools.json              # avMEZOv/MUSD + avBTCv/MUSD CL200 pools
 ```
 
@@ -120,26 +121,32 @@ Canonical **mainnet** MUSD (Mezo / Ethereum / Base, Wormhole NTT):
 
 `0xdD468A1DDc392dcdbEf6db6e34E89AA338F9F186`
 
-That address has **no code on Base Sepolia** (Portal/Wormhole MUSD is mainnet-only). For Sepolia demos:
+That address has **no code on Base Sepolia** (Portal/Wormhole MUSD is mainnet-only).
+
+**Wave 2 demos use the pinned Base Sepolia MUSD** already recorded in `deployments/baseSepolia/addresses.json` and `pools.json`:
+
+`0x560985f804De8187E8FBA94F7127Bc4c0e54AEA5` (`DemoMUSD: null`)
+
+Resolution order in `scripts/lib/horizon-pools.ts`: `MUSD_ADDRESS` env → address-book `MUSD` / `DemoMUSD` → this pinned address → `pools.json`.
+
+Optional local scaffolding if you need a mintable stub instead of the pinned token:
 
 ```bash
 pnpm --filter @aurove/horizon-aero deploy:demo-musd            # dry-run
-pnpm --filter @aurove/horizon-aero deploy:demo-musd:broadcast  # writes DemoMUSD + MUSD into addresses.json
+pnpm --filter @aurove/horizon-aero deploy:demo-musd:broadcast  # writes DemoMUSD (+ MUSD) into addresses.json
 ```
-
-Override with `MUSD_ADDRESS=0x…` when a real testnet MUSD appears.
 
 ## Create / seed Horizon share–MUSD pools
 
-Vault peers (Base Sepolia):
+Vault peers (Base Sepolia — Wave 2; prefer `contracts/deployments/baseSepolia/*Peer.json` when present):
 
 | Share | Address |
 |---|---|
-| avMEZOvPeer | `0x2E9eAa58834c39a8bDe92886Cbf8A18954bFF855` |
-| avBTCvPeer | `0xb25912d67A8fb9C7Acb8b2eB4c1600aF7872D132` |
+| avMEZOv peer | `0x172096f3F0F98B9dc1302695A48044D6A3D799C9` |
+| avBTCv peer | `0x0d36e2B7350950662859A82A91E13Ad7d0E594E0` |
 
 ```bash
-# After Slipstream (+ DemoMUSD) are recorded in addresses.json:
+# After Slipstream is recorded in addresses.json (pinned MUSD is enough; DemoMUSD optional):
 pnpm --filter @aurove/horizon-aero create:horizon-pools            # dry-run → pools.json plan
 pnpm --filter @aurove/horizon-aero create:horizon-pools:broadcast  # CLFactory.createPool (tickSpacing 200)
 pnpm --filter @aurove/horizon-aero seed:horizon-lp                 # dry-run mint plan

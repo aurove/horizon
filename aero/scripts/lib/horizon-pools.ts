@@ -23,9 +23,9 @@ export function isNonZeroAddress(value: string | null | undefined): value is str
 
 const CONTRACTS_BASE_SEPOLIA = join(HORIZON_ROOT, "contracts", "deployments", "baseSepolia");
 
-/** Fallback peers if Hardhat deployment artifacts are missing (pre-redeploy defaults). */
-const FALLBACK_AV_MEZOV_PEER = "0x2E9eAa58834c39a8bDe92886Cbf8A18954bFF855";
-const FALLBACK_AV_BTCV_PEER = "0xb25912d67A8fb9C7Acb8b2eB4c1600aF7872D132";
+/** Fallback peers if Hardhat deployment artifacts are missing (Wave 2 Base Sepolia). */
+const FALLBACK_AV_MEZOV_PEER = "0x172096f3F0F98B9dc1302695A48044D6A3D799C9";
+const FALLBACK_AV_BTCV_PEER = "0x0d36e2B7350950662859A82A91E13Ad7d0E594E0";
 
 function readPeerAddress(artifactName: string, fallback: string): string {
   const path = join(CONTRACTS_BASE_SEPOLIA, `${artifactName}.json`);
@@ -143,7 +143,7 @@ export function emptyPoolsBook(): PoolsBook {
     musdKind: null,
     canonicalMusdMainnet: CANONICAL_MUSD_MAINNET,
     pools: [],
-    note: "Placeholder. Run create-horizon-pools after Slipstream + DemoMUSD (or set MUSD_ADDRESS).",
+    note: "Placeholder. Run create-horizon-pools after Slipstream (pinned MUSD / DemoMUSD / MUSD_ADDRESS).",
   };
 }
 

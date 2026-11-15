@@ -12,19 +12,23 @@ Minimal scaffolding for destination-side (Base) execution after a Mezo → Base 
 
 ## Custody preference
 
-Prefer **mint-to-executor** over mint-to-wallet when the goal is an atomic zap:
+**Default for Wave 2 demos:** mint the vault-share **peer to the user’s wallet** (P0). The user then swaps / LPs in the dapp. That keeps bridged inventory under the user’s control.
+
+**Mint-to-executor** is only for an owner/keeper zap once `swapExactIn` is restricted:
 
 1. NTT mints the vault-share **peer** to `HorizonDestinationExecutor`.
-2. Anyone (or a keeper) calls `swapExactIn` — the contract spends its own balance first, then pulls any shortfall from the caller.
+2. The **owner** (or a future authorized operator) calls `swapExactIn` — the contract spends its own balance first, then pulls any shortfall from the owner.
 3. Slipstream `SwapRouter.exactInputSingle` sends `tokenOut` (typically MUSD) to `recipient`.
 4. `mintLp` is a stub (`revert("not implemented")`) for a follow-on NPM wrapper.
 
-Mint-to-wallet remains fine for P0 guided UX; mint-to-executor unlocks atomic destination zaps without an extra user approve hop for the bridged amount.
+Do **not** mint to the executor while `swapExactIn` is callable by arbitrary addresses: shared custody plus a free `recipient` argument lets a third party swap out bridged balances. The current Solidity requires `onlyOwner` on `swapExactIn` for that reason.
+
+> **Deployed Base Sepolia note:** the Wave 2 address in `SUBMISSION.md` / `aero/deployments/baseSepolia/addresses.json` was broadcast before `onlyOwner` landed. Treat that deployment as a non-custodial stub (do not mint user funds to it). Redeploy from this package before using mint-to-executor custody.
 
 ## Contract surface
 
 - **Config (owner):** Slipstream `swapRouter`, `npm`, `musd`, peer-token allowlist.
-- **`swapExactIn(tokenIn, tokenOut, amountIn, minOut, recipient, tickSpacing)`** → `ISlipstreamSwapRouter.exactInputSingle`.
+- **`swapExactIn(tokenIn, tokenOut, amountIn, minOut, recipient, tickSpacing)`** → `onlyOwner`; `ISlipstreamSwapRouter.exactInputSingle`.
 - **`mintLp()`** → reverts until NPM mint wiring lands.
 - **Event:** `SwapExecuted`.
 
