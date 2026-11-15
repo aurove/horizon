@@ -6,7 +6,7 @@ Minimal scaffolding for destination-side (Base) execution after a Mezo → Base 
 
 | Priority | Scope | Status |
 |----------|--------|--------|
-| **P0** | Guided UX in the dapp: user bridges, then manually swaps / LPs on Aerodrome Slipstream | Done in dapp |
+| **P0** | Guided UX in the dapp: user bridges, then manually swaps / LPs on Aero Slipstream | Done in dapp |
 | **P1** | Wormhole Executor auto-redeem (relayer completes NTT delivery without user claim) | Out of this stretch |
 | **P2** | Mint-to-executor + on-contract swap / LP (`HorizonDestinationExecutor`) | This contract |
 

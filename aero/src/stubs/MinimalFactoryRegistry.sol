@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: MIT
 pragma solidity =0.7.6;
 
-/// @notice Stub registry so CLFactory can construct without full Aerodrome governance.
+/// @notice Stub registry so CLFactory can construct without full Aero governance.
 contract MinimalFactoryRegistry {
     function approve(address, address, address) external {}
 

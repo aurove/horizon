@@ -2,7 +2,7 @@
   "name": "@aurove/horizon-aero",
   "version": "0.0.0",
   "private": true,
-  "description": "Minimal Aerodrome Slipstream stack for Horizon Base Sepolia pools + swap + LP",
+  "description": "Minimal Aero Slipstream stack for Horizon Base Sepolia pools + swap + LP",
   "scripts": {
     "build": "forge build",
     "compile": "forge build",

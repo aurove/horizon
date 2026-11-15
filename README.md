@@ -8,7 +8,7 @@ Horizon extends [Aurove](https://github.com/aurove)'s liquid representations of 
 
 Aurove transforms locked BTC and MEZO positions into **1:1 liquid ERC-1155 representations**, which can be wrapped 1:1 into fungible ERC-20 tokens. Horizon takes these assets further by introducing ERC-4626 vaults whose shares can be bridged across chains and deployed into external liquidity markets.
 
-Starting with Mezo and Base, Horizon enables these assets to participate in MUSD liquidity pools on Aerodrome while their underlying positions remain in Mezo Earn, continuing to generate rewards and yield.
+Starting with Mezo and Base, Horizon enables these assets to participate in MUSD liquidity pools on Aero while their underlying positions remain in Mezo Earn, continuing to generate rewards and yield.
 
 > **Status:** Under development for the 2026 Mezo Buildathon on AKINDO. The architecture and roadmap below describe the intended implementation.
 
@@ -32,7 +32,7 @@ It introduces three capabilities:
 
 1. **Tokenized Vaults:** Extend Aurove's 1:1 liquid representations into ERC-4626 vaults, enabling standardized vault shares that integrate with ERC-20-based DeFi infrastructure.
 2. **Cross-Chain Mobility:** Bridge vault shares from Mezo to other supported networks through Wormhole's Native Token Transfers (NTT) infrastructure.
-3. **External Liquidity:** Enable bridged vault shares to trade and provide liquidity against MUSD on Aerodrome, beginning on Base.
+3. **External Liquidity:** Enable bridged vault shares to trade and provide liquidity against MUSD on Aero, beginning on Base.
 
 The underlying veNFT positions remain in Aurove's custody system on Mezo. Horizon transports their tokenized economic representations, not the original veNFTs.
 
@@ -49,7 +49,7 @@ flowchart TD
     E --> F["ERC-4626 Vault Shares"]
     F --> G["Wormhole NTT<br/>Cross-Chain Transfer"]
     G --> H["Bridged Vault Shares<br/>Base"]
-    H --> I["Aerodrome<br/>Liquidity Pool"]
+    H --> I["Aero<br/>Liquidity Pool"]
     J["MUSD on Base"] --> I
 
     I --> K["Cross-Chain Liquidity<br/>Trading and DeFi Utility"]
@@ -94,9 +94,9 @@ Vault shares are designed to move between Mezo and Base using Wormhole NTT infra
 
 The intended cross-chain design maintains a backed representation of the originating vault shares while the underlying locked positions remain on Mezo.
 
-### 5. Access Aerodrome liquidity
+### 5. Access Aero liquidity
 
-On Base, bridged Horizon vault shares are intended to be paired with MUSD in Aerodrome liquidity pools.
+On Base, bridged Horizon vault shares are intended to be paired with MUSD in Aero liquidity pools.
 
 Canonical **mainnet** MUSD (Mezo / Ethereum / Base via Wormhole NTT): `0xdD468A1DDc392dcdbEf6db6e34E89AA338F9F186`. That contract is **not** deployed on Base Sepolia; Sepolia demos use `DemoMUSD` from `@aurove/horizon-aero` (`pnpm deploy:demo-musd`). See [`aero/README.md`](./aero/README.md) for CL200 pool create/seed scripts.
 
@@ -125,7 +125,7 @@ Horizon extends Aurove's existing infrastructure rather than replacing it.
 | **Aurove Id20** | 1:1 ERC-20 wrappers for fungible ERC-1155 position classes |
 | **Horizon Vaults** | ERC-4626 vaults accepting eligible Id20 assets and compounding attributable yield |
 | **Wormhole NTT** | Cross-chain transfers of vault shares |
-| **Aerodrome** | Trading and liquidity provision for bridged shares against MUSD |
+| **Aero** | Trading and liquidity provision for bridged shares against MUSD |
 
 ### ERC-4626 Vaults
 
@@ -236,7 +236,7 @@ Use `avBTCv` or `avMEZOv` and pass the amount explicitly. Set `HORIZON_ROUNDTRIP
 
 ### Wave 2 E2E (bridge → Aero swap/LP)
 
-Scripted path from Mezo vault shares to Base Sepolia Aerodrome Slipstream swap + LP:
+Scripted path from Mezo vault shares to Base Sepolia Aero Slipstream swap + LP:
 
 ```bash
 # Dry-run (default): validate NTT + aero address books, print plan, write receipt
@@ -275,7 +275,7 @@ Horizon is being developed during the **2026 Mezo Buildathon on AKINDO**.
 
 ### Phase 3 — External Liquidity
 
-- [x] Scaffold minimal Aerodrome Slipstream stack for Base Sepolia (`@aurove/horizon-aero`).
+- [x] Scaffold minimal Aero Slipstream stack for Base Sepolia (`@aurove/horizon-aero`).
 - [x] Add DemoMUSD + scripts to create/seed CL200 `avMEZOv`/`avBTCv` ↔ MUSD pools (broadcast gated).
 - [x] Add Wave 2 E2E script (Mezo deposit?/NTT → Base Aero swap + LP) with dry-run receipts.
 - [ ] Broadcast Slipstream + pools on Base Sepolia and verify swaps.
@@ -304,7 +304,7 @@ Important considerations include:
 - **Liquidity risk:** Vault-share markets may have limited liquidity, price deviations, and slippage.
 - **LP risk:** Providing concentrated liquidity can expose users to impermanent loss and out-of-range positions.
 - **Underlying lock restrictions:** Liquid representations do not remove the original veNFT lock conditions.
-- **External dependencies:** Horizon depends on the correct operation of Aurove, Mezo Earn, Wormhole, Aerodrome, and the tokens involved.
+- **External dependencies:** Horizon depends on the correct operation of Aurove, Mezo Earn, Wormhole, Aero, and the tokens involved.
 
 **Horizon is experimental software under development. It should not be treated as audited or production-ready unless an explicit security assessment and deployment announcement are published.**
 
@@ -316,7 +316,7 @@ Horizon makes that liquidity portable and yield-bearing through ERC-4626 vaults.
 
 By combining Aurove's existing tokenization and compounding infrastructure with cross-chain interoperability and external liquidity markets, Horizon aims to expand the utility of Mezo-native capital beyond its originating network.
 
-Base and Aerodrome are the starting point, not the limit.
+Base and Aero are the starting point, not the limit.
 
 The long-term vision is a network of interoperable vault assets that allow locked capital to remain productive on its home chain while accessing liquidity and opportunities across DeFi.
 
@@ -331,7 +331,7 @@ The long-term vision is a network of interoperable vault assets that allow locke
 - [Mezo](https://mezo.org/)
 - [ERC-4626 Standard](https://eips.ethereum.org/EIPS/eip-4626)
 - [Wormhole Documentation](https://wormhole.com/docs/)
-- [Aerodrome](https://aerodrome.finance/)
+- [Aero](https://aerodrome.finance/)
 
 ### License
 

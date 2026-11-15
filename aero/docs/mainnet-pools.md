@@ -1,4 +1,4 @@
-# Mainnet Aerodrome Horizon pools (Base)
+# Mainnet Aero Horizon pools (Base)
 
 Operator runbook for **avMEZOv / MUSD** and **avBTCv / MUSD** Slipstream pools on **Base mainnet**.
 
@@ -50,4 +50,4 @@ Sepolia helpers (`create-horizon-pools`, `seed-horizon-lp`) target the **minimal
 
 ## Gauge listing (follow-on)
 
-Pool create + seed does **not** attach emissions. Gauge listing is a **separate** Aerodrome / **veAERO** governance step after the pool exists and has liquidity. Stake LP NFTs only after a live gauge is approved for the pool.
+Pool create + seed does **not** attach emissions. Gauge listing is a **separate** Aero / **veAERO** governance step after the pool exists and has liquidity. Stake LP NFTs only after a live gauge is approved for the pool.

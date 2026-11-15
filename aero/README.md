@@ -1,6 +1,6 @@
 # `@aurove/horizon-aero`
 
-Minimal Aerodrome **Slipstream** stack for Horizon Wave 2 demos on **Base Sepolia**.
+Minimal Aero **Slipstream** stack for Horizon Wave 2 demos on **Base Sepolia**.
 
 ## Scope
 

@@ -225,7 +225,7 @@ function slideTitle() {
   });
 
   s.addText(
-    "ERC-4626 vault shares of Aurove liquid wrappers, bridged via Wormhole NTT\nto Aerodrome pools on Base — without unlocking Mezo Earn positions.",
+    "ERC-4626 vault shares of Aurove liquid wrappers, bridged via Wormhole NTT\nto Aero pools on Base — without unlocking Mezo Earn positions.",
     {
       x: 0.6,
       y: 4.75,
@@ -357,7 +357,7 @@ function slideProblemSolution() {
         options: { bullet: true, breakLine: true },
       },
       {
-        text: "Aerodrome LPs trade / provide avMEZOv–MUSD liquidity",
+        text: "Aero LPs trade / provide avMEZOv–MUSD liquidity",
         options: { bullet: true },
       },
     ],
@@ -483,7 +483,7 @@ function slideDemo() {
   const s = pres.addSlide();
   bg(s);
   eyebrow(s, "DEMO PATH  \u00B7  WAVE 2");
-  s.addText("From vault share to Aerodrome LP", {
+  s.addText("From vault share to Aero LP", {
     x: 0.6,
     y: 0.85,
     w: 12,
@@ -508,7 +508,7 @@ function slideDemo() {
     },
     {
       n: "3",
-      title: "Swap / LP on Aerodrome Slipstream",
+      title: "Swap / LP on Aero Slipstream",
       detail: "avMEZOv–MUSD (and avBTCv–MUSD) CL pools; E2E script + mainnet runbook",
     },
     {
@@ -594,7 +594,7 @@ function slideFlywheel() {
       title: "SUPPLY",
       color: COLOR.blue,
       body:
-        "Lock MEZO → veMEZO → Aurove → Horizon avMEZOv → bridge → LP avMEZOv/MUSD on Aerodrome",
+        "Lock MEZO → veMEZO → Aurove → Horizon avMEZOv → bridge → LP avMEZOv/MUSD on Aero",
     },
     {
       x: 4.55,
@@ -609,7 +609,7 @@ function slideFlywheel() {
       y: 1.4,
       title: "BASE LIQUIDITY",
       color: COLOR.teal,
-      body: "Pool fees on Aerodrome (+ AERO incentives later). LPs hold appreciating vault shares, not bare wrappers.",
+      body: "Pool fees on Aero (+ AERO incentives later). LPs hold appreciating vault shares, not bare wrappers.",
     },
   ];
 
