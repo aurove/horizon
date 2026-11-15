@@ -25,4 +25,5 @@ skip = [
 base_sepolia = "${BASE_SEPOLIA_RPC_URL}"
 
 [etherscan]
-base_sepolia = { key = "${BASESCAN_API_KEY}", url = "https://api-sepolia.basescan.org/api" }
+# Etherscan API V2 (Basescan chainid 84532)
+base_sepolia = { key = "${BASESCAN_API_KEY}", url = "https://api.etherscan.io/v2/api?chainid=84532" }

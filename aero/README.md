@@ -80,6 +80,16 @@ pnpm --filter @aurove/horizon-aero deploy:slipstream:base-sepolia:broadcast
 
 Idempotent: if `PoolFactory` is already set in the address book, broadcast is skipped unless `--force`.
 
+### Verify on Basescan
+
+Requires `BASESCAN_API_KEY` or `ETHERSCAN_API_KEY` (Etherscan API V2):
+
+```bash
+pnpm --filter @aurove/horizon-aero verify:slipstream:base-sepolia
+```
+
+Verifies stubs, `CLPool`, `CLFactory`, NPM, SwapRouter, and QuoterV2. CL200 pool addresses are EIP-1167 clones of `PoolImplementation` and resolve on Basescan once `CLPool` is verified.
+
 Equivalent forge invocation:
 
 ```bash

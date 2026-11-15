@@ -16,6 +16,7 @@
     "create:horizon-pools:broadcast": "tsx scripts/create-horizon-pools.ts --broadcast",
     "seed:horizon-lp": "tsx scripts/seed-horizon-lp.ts",
     "seed:horizon-lp:broadcast": "tsx scripts/seed-horizon-lp.ts --broadcast",
+    "verify:slipstream:base-sepolia": "tsx scripts/verify-slipstream-base-sepolia.ts",
     "test": "forge test"
   },
   "dependencies": {

@@ -51,39 +51,47 @@ Underlying Id20 assets (from vault `linkedData`):
 
 | Contract | Address | Explorer |
 | --- | --- | --- |
-| avBTCv peer | `0x0d36e2B7350950662859A82A91E13Ad7d0E594E0` | [verified](https://sepolia.basescan.org/address/0x0d36e2B7350950662859A82A91E13Ad7d0E594E0#code) |
-| avMEZOv peer | `0x172096f3F0F98B9dc1302695A48044D6A3D799C9` | [verified](https://sepolia.basescan.org/address/0x172096f3F0F98B9dc1302695A48044D6A3D799C9#code) |
+| avBTCv peer | `0x0d36e2B7350950662859A82A91E13Ad7d0E594E0` | [Basescan verified](https://sepolia.basescan.org/address/0x0d36e2B7350950662859A82A91E13Ad7d0E594E0#code) |
+| avMEZOv peer | `0x172096f3F0F98B9dc1302695A48044D6A3D799C9` | [Basescan verified](https://sepolia.basescan.org/address/0x172096f3F0F98B9dc1302695A48044D6A3D799C9#code) |
 | MUSD (pinned) | `0x560985f804De8187E8FBA94F7127Bc4c0e54AEA5` | [token](https://sepolia.basescan.org/address/0x560985f804De8187E8FBA94F7127Bc4c0e54AEA5) |
-| HorizonDestinationExecutor | `0xA874C686D513B079A02399B4dAFC36669C23Ad5b` | [verified](https://sepolia.basescan.org/address/0xA874C686D513B079A02399B4dAFC36669C23Ad5b#code) |
-| Slipstream PoolFactory | `0x6e8614B6f32145D680209a4959153f36BD208b85` | [address](https://sepolia.basescan.org/address/0x6e8614B6f32145D680209a4959153f36BD208b85) |
-| NonfungiblePositionManager | `0xB0D6450Ed37Da105B7ea3cd29D1256616DaA9B5F` | [address](https://sepolia.basescan.org/address/0xB0D6450Ed37Da105B7ea3cd29D1256616DaA9B5F) |
-| SwapRouter | `0xE056f7fF35B952E7BE7D78b8F68c0F293fB6E6Ba` | [address](https://sepolia.basescan.org/address/0xE056f7fF35B952E7BE7D78b8F68c0F293fB6E6Ba) |
-| avMEZOv–MUSD CL200 pool | `0xD084DB8cBbE7865d4dAcaF35e4a4A6a436D0EEe8` | [address](https://sepolia.basescan.org/address/0xD084DB8cBbE7865d4dAcaF35e4a4A6a436D0EEe8) |
-| avBTCv–MUSD CL200 pool | `0x95D890750550791E44a1d1f4986443d51696BdA5` | [address](https://sepolia.basescan.org/address/0x95D890750550791E44a1d1f4986443d51696BdA5) |
+| HorizonDestinationExecutor | `0xA874C686D513B079A02399B4dAFC36669C23Ad5b` | [Basescan verified](https://sepolia.basescan.org/address/0xA874C686D513B079A02399B4dAFC36669C23Ad5b#code) |
+| Slipstream PoolFactory (`CLFactory`) | `0x6e8614B6f32145D680209a4959153f36BD208b85` | [Basescan verified](https://sepolia.basescan.org/address/0x6e8614B6f32145D680209a4959153f36BD208b85#code) |
+| Pool implementation (`CLPool`) | `0xcF67F0Bb906B38AaE207015b9C20C53C3fe84610` | [Basescan verified](https://sepolia.basescan.org/address/0xcF67F0Bb906B38AaE207015b9C20C53C3fe84610#code) |
+| NonfungiblePositionManager | `0xB0D6450Ed37Da105B7ea3cd29D1256616DaA9B5F` | [Basescan verified](https://sepolia.basescan.org/address/0xB0D6450Ed37Da105B7ea3cd29D1256616DaA9B5F#code) |
+| SwapRouter | `0xE056f7fF35B952E7BE7D78b8F68c0F293fB6E6Ba` | [Basescan verified](https://sepolia.basescan.org/address/0xE056f7fF35B952E7BE7D78b8F68c0F293fB6E6Ba#code) |
+| QuoterV2 | `0x6C1d018B50019c6b51E1cc9F68027D31Ad10061F` | [Basescan verified](https://sepolia.basescan.org/address/0x6C1d018B50019c6b51E1cc9F68027D31Ad10061F#code) |
+| MinimalFactoryRegistry | `0x429B6270E959794d256C9D78421f56D635fd00bC` | [Basescan verified](https://sepolia.basescan.org/address/0x429B6270E959794d256C9D78421f56D635fd00bC#code) |
+| MinimalLegacyCLFactory | `0x51751793817DeBD736aA05948036B43463f1BFea` | [Basescan verified](https://sepolia.basescan.org/address/0x51751793817DeBD736aA05948036B43463f1BFea#code) |
+| MinimalVoter | `0xEd7Db0248eD651E24Bc87E7e289dBD388bd6AaA7` | [Basescan verified](https://sepolia.basescan.org/address/0xEd7Db0248eD651E24Bc87E7e289dBD388bd6AaA7#code) |
+| MinimalPositionDescriptor | `0xF1d9cEB0fc2d1c49795903d9feB9f790de9A550c` | [Basescan verified](https://sepolia.basescan.org/address/0xF1d9cEB0fc2d1c49795903d9feB9f790de9A550c#code) |
+| avMEZOv–MUSD CL200 pool | `0xD084DB8cBbE7865d4dAcaF35e4a4A6a436D0EEe8` | [Basescan verified](https://sepolia.basescan.org/address/0xD084DB8cBbE7865d4dAcaF35e4a4A6a436D0EEe8#code) (EIP-1167 → `CLPool`) |
+| avBTCv–MUSD CL200 pool | `0x95D890750550791E44a1d1f4986443d51696BdA5` | [Basescan verified](https://sepolia.basescan.org/address/0x95D890750550791E44a1d1f4986443d51696BdA5#code) (EIP-1167 → `CLPool`) |
 
 ### Wormhole NTT (testnet)
 
+Proxies and implementations are verified on Mezo Blockscout / Basescan (and Sourcify). Linked library `TransceiverStructs` on Base Sepolia: [`0xDB8D732c9f7a8eeC4dFce192f2B902f3c04D73ed`](https://sepolia.basescan.org/address/0xDB8D732c9f7a8eeC4dFce192f2B902f3c04D73ed#code).
+
 #### avBTCv
 
-| Chain | Role | Address |
-| --- | --- | --- |
-| Mezo | NTT manager (locking) | [`0x01B2C64505f367203429753029EA8BEB66987a09`](https://explorer.test.mezo.org/address/0x01B2C64505f367203429753029EA8BEB66987a09#code) |
-| Mezo | Wormhole transceiver | `0xA21328Abc178E1b47eC9A14f40e7100372678d10` |
-| Mezo | Token (vault) | `0x8e95C83A5144dcdD6ce79D7fBd58057b689f086f` |
-| BaseSepolia | NTT manager (burning) | `0x96e12AD5F0402a458823A8E2A6Ea0E986DCD358e` |
-| BaseSepolia | Wormhole transceiver | `0x82C8d99f67eB28b023387236051cB292c9A477AA` |
-| BaseSepolia | Token (peer) | `0x0d36e2B7350950662859A82A91E13Ad7d0E594E0` |
+| Chain | Role | Address | Explorer |
+| --- | --- | --- | --- |
+| Mezo | NTT manager (locking) | `0x01B2C64505f367203429753029EA8BEB66987a09` | [Blockscout verified](https://explorer.test.mezo.org/address/0x01B2C64505f367203429753029EA8BEB66987a09#code) |
+| Mezo | Wormhole transceiver | `0xA21328Abc178E1b47eC9A14f40e7100372678d10` | [Blockscout verified](https://explorer.test.mezo.org/address/0xA21328Abc178E1b47eC9A14f40e7100372678d10#code) |
+| Mezo | Token (vault) | `0x8e95C83A5144dcdD6ce79D7fBd58057b689f086f` | [Sourcify verified](https://repo.sourcify.dev/31611/0x8e95C83A5144dcdD6ce79D7fBd58057b689f086f) |
+| BaseSepolia | NTT manager (burning) | `0x96e12AD5F0402a458823A8E2A6Ea0E986DCD358e` | [Basescan verified](https://sepolia.basescan.org/address/0x96e12AD5F0402a458823A8E2A6Ea0E986DCD358e#code) |
+| BaseSepolia | Wormhole transceiver | `0x82C8d99f67eB28b023387236051cB292c9A477AA` | [Basescan verified](https://sepolia.basescan.org/address/0x82C8d99f67eB28b023387236051cB292c9A477AA#code) |
+| BaseSepolia | Token (peer) | `0x0d36e2B7350950662859A82A91E13Ad7d0E594E0` | [Basescan verified](https://sepolia.basescan.org/address/0x0d36e2B7350950662859A82A91E13Ad7d0E594E0#code) |
 
 #### avMEZOv
 
-| Chain | Role | Address |
-| --- | --- | --- |
-| Mezo | NTT manager (locking) | [`0x2a0B2726f7822cEBdE9D665D049a42f13Fa6A517`](https://explorer.test.mezo.org/address/0x2a0B2726f7822cEBdE9D665D049a42f13Fa6A517#code) |
-| Mezo | Wormhole transceiver | `0x6201F4c88aAfDd627108467dafA81464E3eb885a` |
-| Mezo | Token (vault) | `0x2C45a18a23d5bfFf3Fc0c4Bff6376dA1d943373c` |
-| BaseSepolia | NTT manager (burning) | `0x79D11c9d7F5d5ef676c4c87Cf9deEC5D972bd8A1` |
-| BaseSepolia | Wormhole transceiver | `0x9383b1ACAf2bD2B0F6b205Be9fFbCcBfC78A8300` |
-| BaseSepolia | Token (peer) | `0x172096f3F0F98B9dc1302695A48044D6A3D799C9` |
+| Chain | Role | Address | Explorer |
+| --- | --- | --- | --- |
+| Mezo | NTT manager (locking) | `0x2a0B2726f7822cEBdE9D665D049a42f13Fa6A517` | [Blockscout verified](https://explorer.test.mezo.org/address/0x2a0B2726f7822cEBdE9D665D049a42f13Fa6A517#code) |
+| Mezo | Wormhole transceiver | `0x6201F4c88aAfDd627108467dafA81464E3eb885a` | [Blockscout verified](https://explorer.test.mezo.org/address/0x6201F4c88aAfDd627108467dafA81464E3eb885a#code) |
+| Mezo | Token (vault) | `0x2C45a18a23d5bfFf3Fc0c4Bff6376dA1d943373c` | [Sourcify verified](https://repo.sourcify.dev/31611/0x2C45a18a23d5bfFf3Fc0c4Bff6376dA1d943373c) |
+| BaseSepolia | NTT manager (burning) | `0x79D11c9d7F5d5ef676c4c87Cf9deEC5D972bd8A1` | [Basescan verified](https://sepolia.basescan.org/address/0x79D11c9d7F5d5ef676c4c87Cf9deEC5D972bd8A1#code) |
+| BaseSepolia | Wormhole transceiver | `0x9383b1ACAf2bD2B0F6b205Be9fFbCcBfC78A8300` | [Basescan verified](https://sepolia.basescan.org/address/0x9383b1ACAf2bD2B0F6b205Be9fFbCcBfC78A8300#code) |
+| BaseSepolia | Token (peer) | `0x172096f3F0F98B9dc1302695A48044D6A3D799C9` | [Basescan verified](https://sepolia.basescan.org/address/0x172096f3F0F98B9dc1302695A48044D6A3D799C9#code) |
 
 VaultPeer minters are sealed to spoke NTT managers; peer ownership is renounced. Full NTT verify commands: [`wormhole/README.md`](./wormhole/README.md).
 
@@ -121,15 +129,11 @@ pnpm verify:cross-chain:testnet   # RPCs defaulted; BASESCAN_API_KEY optional
 
 ## Team
 
-Replace placeholders with confirmed names / roles / contacts before final form submit. Do not invent biographies.
-
 | Name | Role | Contact |
 | --- | --- | --- |
-| Aurove core contributors | Protocol / product | _TBD_ |
-| _TBD_ | Engineering | _TBD_ |
-| _TBD_ | Design / GTM | _TBD_ |
+| Capy Levi | Founder & Lead Developer, Aurove | [@levi_chimezie](https://x.com/levi_chimezie) |
 
-Pitch deck team slide mirrors these placeholders: [`docs/pitch/Aurove-Horizon-Wave2.pptx`](./docs/pitch/Aurove-Horizon-Wave2.pptx).
+Pitch deck team slide: [`docs/pitch/Aurove-Horizon-Wave2.pptx`](./docs/pitch/Aurove-Horizon-Wave2.pptx).
 
 ## Env vars for judges (no secrets)
 
@@ -195,11 +199,18 @@ Server-only secrets (`SUPABASE_SERVICE_ROLE_KEY`, `DATABASE_URL`, `CRON_INTERNAL
 - [x] Live URL guidance: prefer `testnet.aurove.xyz` / `www.aurove.xyz`; dApp source on **`testnet`** branch
 - [x] Pitch deck at `docs/pitch/Aurove-Horizon-Wave2.pptx`
 
+### Explorer verification (testnet)
+
+- [x] Mezo NTT managers + Wormhole transceivers (Blockscout)
+- [x] Base Sepolia NTT managers + Wormhole transceivers + `TransceiverStructs` (Basescan)
+- [x] Aero Slipstream stack (PoolFactory, CLPool, NPM, SwapRouter, QuoterV2, stubs) + CL200 pools via EIP-1167 (Basescan)
+- [x] Address tables in this file link to verified `#code` explorer pages
+
 ### Demos
 
 - [x] Demo tx hashes / explorer links filled in (Mezo→Base bridge + seed + live E2E swap/LP 2026-11-15)
 - [ ] Demo video linked
-- [ ] Team table: replace placeholders with confirmed names / roles / contacts
+- [x] Team table: Capy Levi (Founder & Lead Developer) · [@levi_chimezie](https://x.com/levi_chimezie)
 - [ ] Optional: Base Sepolia → Mezo return demo tx linked
 - [ ] Optional: harvest / compound demo tx linked
 
