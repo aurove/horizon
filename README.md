@@ -250,7 +250,7 @@ Package-level detail:
 cp .env.example .env
 ```
 
-Judges running read-only commands need only public RPCs (defaults are fine). Deploy and live bridge/E2E flows need keys and confirmation flags — see `.env.example` and [`SUBMISSION.md`](./SUBMISSION.md). Never commit private keys.
+Judges running `pnpm test` and other non-verify read-only commands need only public RPCs (defaults are fine). `pnpm verify:cross-chain:testnet` also needs `BASESCAN_API_KEY` or `ETHERSCAN_API_KEY` (plus `pnpm --filter @aurove/horizon-wormhole ntt:install`). Deploy and live bridge/E2E flows need keys and confirmation flags — see `.env.example` and [`SUBMISSION.md`](./SUBMISSION.md). Never commit private keys.
 
 ### Cross-chain deploy (testnet)
 
@@ -259,10 +259,11 @@ export ETH_PRIVATE_KEY=0x...
 export HORIZON_AVBTCV_NTT_LIMIT=100
 export HORIZON_AVMEZOV_NTT_LIMIT=100
 export CONFIRM_HORIZON_DEPLOYMENT=YES
+export BASESCAN_API_KEY=...   # or ETHERSCAN_API_KEY; required unless HORIZON_SKIP_NTT_VERIFY=YES
 pnpm deploy:cross-chain:testnet
 ```
 
-This deploys Mezo vaults and Base peers, deploys/configures NTT, sets rate limits, and seals each spoke peer to its NTT manager. Verification runs by default (`BASESCAN_API_KEY` for Basescan). Standalone: `pnpm verify:cross-chain:testnet`.
+This deploys Mezo vaults and Base peers, deploys/configures NTT, sets rate limits, and seals each spoke peer to its NTT manager. Verification runs by default and requires a Basescan/Etherscan API key. Skip with `HORIZON_SKIP_NTT_VERIFY=YES`. Standalone: `pnpm verify:cross-chain:testnet` (same key requirement).
 
 Fresh local records + new on-chain deployments (old addresses remain live):
 
