@@ -29,5 +29,5 @@
       "sqrtPriceX96Init": "79228162514264337593543950336"
     }
   ],
-  "note": "CL200 vault-share/MUSD pools on minimal Slipstream (Base Sepolia)."
+  "note": "Pools seeded with small full-range LP via NPM."
 }

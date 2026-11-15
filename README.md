@@ -242,11 +242,13 @@ Scripted path from Mezo vault shares to Base Sepolia Aerodrome Slipstream swap +
 # Dry-run (default): validate NTT + aero address books, print plan, write receipt
 pnpm e2e:horizon-aero:testnet -- avMEZOv 0.01
 
-# Live (requires Slipstream + DemoMUSD/pools on Base Sepolia)
+# Live (requires seeded CL200 pools on Base Sepolia)
 CONFIRM_HORIZON_E2E=YES pnpm e2e:horizon-aero:testnet -- avMEZOv 0.01
 ```
 
 Set `HORIZON_E2E_PRIVATE_KEY` for live runs. Optional: `E2E_DEPOSIT_ASSETS` (Id20→vault before bridge), `E2E_SWAP_BPS` (default `5000`), `E2E_SKIP_BRIDGE=YES` (use existing peer balance). Receipts land at `reports/wave2-e2e-<timestamp>.json`. Dry-run succeeds even when Slipstream is not yet broadcast.
+
+**Bootstrap order:** empty pools cannot support the E2E peer→MUSD swap. After peers and Base Sepolia MUSD (`0x5609…`) are in the wallet, run `pnpm seed:horizon-lp:broadcast` first, then the live E2E.
 
 ## Buildathon Roadmap
 

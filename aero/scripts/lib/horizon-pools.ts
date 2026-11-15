@@ -47,7 +47,10 @@ export const AV_BTCV_PEER = readPeerAddress("avBTCvPeer", FALLBACK_AV_BTCV_PEER)
 /** Canonical MUSD on Base / Ethereum / Mezo mainnet (NTT). Not present on Base Sepolia. */
 export const CANONICAL_MUSD_MAINNET = getAddress("0xdD468A1DDc392dcdbEf6db6e34E89AA338F9F186");
 
-/** User-provided Base Sepolia MUSD (Wave 2 testnet). */
+/**
+ * Base Sepolia MUSD (Mezo testnet NTT spoke token).
+ * Hub Mezo testnet MUSD is `0x118917a40FAF1CD7a13dB0Ef56C86De7973Ac503` — different address, no code here.
+ */
 export const BASE_SEPOLIA_MUSD = getAddress("0x560985f804De8187E8FBA94F7127Bc4c0e54AEA5");
 
 export const TICK_SPACING = 200;

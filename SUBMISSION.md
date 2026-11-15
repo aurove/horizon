@@ -87,15 +87,21 @@ Deployer / NTT owner (testnet): `0x6E1126EA838DA392A55D8DdeD9bADEccA5835114`. Va
 
 ## Demo transactions
 
-Demo explorer links are **TBD until live E2E broadcast**. Local/script dry-runs may leave receipts under `reports/`; fill the table below once a signed testnet (or mainnet) walkthrough is published.
+Live Base Sepolia walkthroughs (2026-11-15). Receipts also under `reports/wave2-e2e-*.json`. Wallet `0x6E1126EA838DA392A55D8DdeD9bADEccA5835114`.
 
 | Flow | Explorer link | Notes |
 | --- | --- | --- |
-| Deposit into vault (Mezo) | _TBD_ | Pending live E2E broadcast |
-| Harvest / compound | _TBD_ | Pending live E2E broadcast |
-| Bridge Mezo → Base Sepolia (NTT) | _TBD_ | Prefer `reports/` receipt from `pnpm bridge:roundtrip:testnet` once broadcast |
-| Bridge Base Sepolia → Mezo (return) | _TBD_ | Pending live E2E broadcast |
-| Aerodrome LP / swap | _TBD_ | Wave 2 path: `pnpm e2e:horizon-aero` / mainnet runbook in [`aero/docs/mainnet-pools.md`](./aero/docs/mainnet-pools.md) |
+| Deposit into vault (Mezo) | Prior Id20→vault deposits for bridged inventory | Wave 2 ops; not re-run in this E2E (`E2E_SKIP_BRIDGE`) |
+| Harvest / compound | _TBD_ | Out of scope for Wave 2 Aero path |
+| Bridge Mezo → Base Sepolia (avMEZOv) | [Mezo tx `0xfbe5048c…075b4d`](https://wormholescan.io/#/tx/0xfbe5048c479ddba224b7f36af377d7b8cdaa9106a7293d4428e4539615075b4d?network=Testnet) | 10 avMEZOv landed on peer `0x1720…C9` |
+| Bridge Mezo → Base Sepolia (avBTCv) | [Mezo tx `0xfd4c6ee6…a0e038`](https://wormholescan.io/#/tx/0xfd4c6ee6ba106bcd131d1c0f6e8ce0b6b52ed4fc02ab5696193f61c06ea0e038?network=Testnet) | 0.002 avBTCv landed on peer `0x0d36…E0` |
+| Bridge Base Sepolia → Mezo (return) | _TBD_ | Optional; not required for Aero LP demo |
+| Seed CL200 LP (avMEZOv–MUSD) | [Base `0x69515bf4…83a6f1`](https://sepolia.basescan.org/tx/0x69515bf4e74ed62aa4b5b370f4641e2c7ef4f076f8f8952dcd42e33f7a83a6f1) | `pnpm seed:horizon-lp:broadcast` (0.001 / 0.001) |
+| Seed CL200 LP (avBTCv–MUSD) | [Base `0xc395cff7…e99bf5`](https://sepolia.basescan.org/tx/0xc395cff77a6c361faf41411de5fa68e8ae21f4a0d61a04bb0ea82d9743e99bf5) | Same seed run |
+| E2E swap + LP (avMEZOv) | Swap [`0xf91b8a9c…de4aaf`](https://sepolia.basescan.org/tx/0xf91b8a9ceddc0cbfc2280db52058252aae1f68f4ff08220f648c94d308de4aaf) · LP [`0x9d90b16f…cb4c88`](https://sepolia.basescan.org/tx/0x9d90b16fa655efa4a4b9f3ad2c1204af212926fd1d850ddab389d2376ccb4c88) | `E2E_SKIP_BRIDGE=YES` amount `0.01`; receipt `reports/wave2-e2e-1794723409190.json` |
+| E2E swap + LP (avBTCv) | Swap [`0xd65aa006…c26a3`](https://sepolia.basescan.org/tx/0xd65aa006d90938519751bcaf4df911c6d8d388e65eba5d079e7e49408e2c26a3) · LP [`0x341299db…46bf34`](https://sepolia.basescan.org/tx/0x341299dba0b7f61df6c311011e360babdd6202030bcb2a15c5854b18e346bf34) | amount `0.0005`; receipt `reports/wave2-e2e-1794723440756.json` |
+
+**Note:** Mezo testnet Portal MUSD NTT (transceiver `0x0E628…`) stopped producing guardian VAAs after sequence 88. Large (~7555) and tiny (1) Mezo→Base MUSD transfers remain unclaimable via Wormholescan; Base Sepolia MUSD inventory for this demo came from an alternate path once the deployer balance was non-zero. Vault-share NTT (avMEZOv / avBTCv) VAAs continue to work.
 
 ## Team
 
@@ -163,7 +169,7 @@ Server-only secrets (`SUPABASE_SERVICE_ROLE_KEY`, `DATABASE_URL`, `CRON_INTERNAL
 - [x] README license section updated
 - [x] `"license": "MIT"` on root / contracts / wormhole `package.json`
 - [x] Live URL guidance: prefer public custom domains; document former SSO on `*.vercel.app` + disable attempt; document local dApp run path
-- [ ] Demo tx hashes / explorer links filled in (TBD until live E2E broadcast)
+- [x] Demo tx hashes / explorer links filled in (seed + live E2E swap/LP 2026-11-15)
 - [ ] Team table: replace placeholders with confirmed names / roles / contacts
 - [ ] Demo video linked
 - [x] Pitch deck at `docs/pitch/Aurove-Horizon-Wave2.pptx`

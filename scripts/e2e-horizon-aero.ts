@@ -27,6 +27,7 @@ import { Vault__factory } from "../contracts/typechain/factories/src/Vault__fact
 import { VaultPeer__factory } from "../contracts/typechain/factories/src/VaultPeer__factory";
 import {
   ICLFactoryAbi,
+  ICLPoolAbi,
   INonfungiblePositionManagerAbi,
   ISwapRouterAbi,
 } from "../aero/abis/minimal.js";
@@ -197,11 +198,18 @@ function parseAmount(amount: string, decimals: number): bigint {
   return units;
 }
 
+/** Base Sepolia MUSD spoke (Mezo testnet NTT). Hub Mezo MUSD is a different address. */
+const BASE_SEPOLIA_MUSD = "0x560985f804De8187E8FBA94F7127Bc4c0e54AEA5";
+
 function resolveMusd(book: AddressBook, pools: PoolsBook): { address: string | null; kind: string | null } {
   const env = process.env.MUSD_ADDRESS?.trim();
   if (env && isNonZeroAddress(env)) return { address: getAddress(env), kind: "env" };
+  if (isNonZeroAddress(book.MUSD) && !isNonZeroAddress(book.DemoMUSD)) {
+    return { address: getAddress(book.MUSD), kind: "env" };
+  }
   if (isNonZeroAddress(book.DemoMUSD)) return { address: getAddress(book.DemoMUSD), kind: "demo" };
   if (isNonZeroAddress(book.MUSD)) return { address: getAddress(book.MUSD), kind: "demo" };
+  if (isNonZeroAddress(BASE_SEPOLIA_MUSD)) return { address: getAddress(BASE_SEPOLIA_MUSD), kind: "env" };
   if (isNonZeroAddress(pools.musd)) return { address: getAddress(pools.musd), kind: pools.musdKind ?? "demo" };
   return { address: null, kind: null };
 }
@@ -751,6 +759,20 @@ async function main(): Promise<void> {
       notes.push("Pool not created yet — LP mint will pass sqrtPriceX96 init if needed.");
     }
 
+    if (isNonZeroAddress(poolAddress)) {
+      const poolContract = new Contract(poolAddress, ICLPoolAbi, baseProvider);
+      const poolLiquidity = (await poolContract.liquidity()) as bigint;
+      if (poolLiquidity === 0n) {
+        fail(
+          `Pool ${poolAddress} has liquidity=0. Bootstrap with \`pnpm --filter @aurove/horizon-aero seed:horizon-lp:broadcast\` (needs Base peer + MUSD balances) before E2E swap/LP.`,
+        );
+      }
+    } else {
+      fail(
+        "No on-chain pool for this pair. Run create:horizon-pools:broadcast then seed:horizon-lp:broadcast before E2E.",
+      );
+    }
+
     console.log(
       `Swapping ${formatUnits(swapIn, decimals)} ${symbol} → MUSD via Slipstream router…`,
     );
@@ -774,17 +796,9 @@ async function main(): Promise<void> {
 
     const musdBal = (await musdToken.balanceOf(recipient)) as bigint;
     if (musdBal === 0n) {
-      // DemoMUSD fallback for empty-pool demos
-      try {
-        console.log("MUSD balance still 0 after swap; attempting DemoMUSD.mint for LP…");
-        const mintAmt = lpPeer; // 1:1 demo sizing
-        const mintTx = await musdToken.mint(recipient, mintAmt);
-        const mintReceipt = await mintTx.wait();
-        if (mintReceipt?.hash) swapTxs.push(mintReceipt.hash);
-        notes.push("Swap returned 0 MUSD (likely empty pool); minted DemoMUSD for LP demo.");
-      } catch {
-        fail("Swap produced 0 MUSD and DemoMUSD.mint failed — seed pool liquidity first");
-      }
+      fail(
+        "Swap produced 0 MUSD. Seed pool liquidity first with seed:horizon-lp:broadcast (pinned Base Sepolia MUSD is not publicly mintable).",
+      );
     }
 
     const musdForLp = (await musdToken.balanceOf(recipient)) as bigint;
